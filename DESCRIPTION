@@ -1,0 +1,49 @@
+Package: nvdr
+Title: NVD Vulnerability Data Analyser
+Version: 0.1
+Authors@R: person("github.com/realerikrani", email = "realerikrani@tuta.io", role = c("aut", "cre", "cph"))
+Description: R package *nvdr* provides forecasts of monthly mean CVSS scores of subsets of CWE vulnerabilities.
+Depends: R (>= 3.4.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: 
+    XML,
+    data.table,
+    plyr,
+    zoo,
+    stats,
+    forecast (>= 8.2),
+    gridExtra,
+    ggplot2,
+    utils,
+    methods,
+    R6,
+    fracdiff,
+    remotes,
+    lmtest
+Collate:
+    'nvdmodel.R'
+    'fitmodel.R'
+    'etsmodel.R'
+    'arimamodel.R'
+    'tslinearmodel.R'
+    'nnarmodel.R'
+    'arfimamodel.R'
+    'baggedetsmodel.R'
+    'tbatsmodel.R'
+    'structtsmodel.R'
+    'benchmarkmodel.R'
+    'meanmodel.R'
+    'driftmodel.R'
+    'naivemodel.R'
+    'seasonalnaivemodel.R'
+    'cwe_analyser.R'
+    'cwe_analyser_utils.R'
+    'data.R'
+    'timeseries_maker.R'
+    'xmlparser.R'
+    'xmlparser_utils.R'
+    'cvssforecaster.R'
+    'modeller.R'
