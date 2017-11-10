@@ -13,13 +13,7 @@ ARIMAModel <- R6::R6Class(
                              stepwise = stepw, approximation = approx)
       fit <- forecast::auto.arima(train, stepwise = stepw,
                                   approximation = approx)
-      if (fit$aicc <= fit_bc$aicc) {
-        private$fit <- fit
-      } else {
-        private$fit <- fit_bc
-      }
-      private$fcast <- forecast::forecast(super$getFitted(),
-                                          h = private$fcast_period)
+      super$setFittedFcasted(fit, fit_bc)
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsRandomnessBox(residuals,
                                        length(super$getFitted()$coef))

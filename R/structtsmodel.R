@@ -3,10 +3,13 @@ StructTSModel <- R6::R6Class(
   inherit = FitModel,
 
   public = list(
+    setFittedFcasted = function(){
+      super$setFitted(stats::StructTS(super$getTrainingSet()))
+      super$setFcasted(forecast::forecast(super$getFitted(),
+                                          h = private$fcast_period))
+    },
     buildModel = function(){
-      private$fit <- stats::StructTS(super$getTrainingSet())
-      private$fcast <- forecast::forecast(super$getFitted(),
-                                          h = private$fcast_period)
+      self$setFittedFcasted()
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsNormality(residuals)
       super$setPiIgnored(TRUE)

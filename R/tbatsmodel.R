@@ -3,12 +3,14 @@ TBATSModel <- R6::R6Class(
   inherit = FitModel,
 
   public = list(
-    buildModel = function(){
+    setFittedFcasted = function(){
       # No need to output text about missing values or optimization convergence
       private$fit <- suppressWarnings(forecast::tbats(super$getTrainingSet()))
       private$fcast <- forecast::forecast(super$getFitted(),
                                           h = private$fcast_period)
-
+    },
+    buildModel = function(){
+      self$setFittedFcasted()
       residuals <- zoo::na.approx(stats::residuals(super$getFitted()))
       super$testResidualsRandomnessBox(
         residuals,
