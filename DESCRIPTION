@@ -14,7 +14,7 @@ Imports:
     plyr,
     zoo,
     stats,
-    forecast (>= 8.2),
+    forecast,
     gridExtra,
     ggplot2,
     utils,
@@ -23,6 +23,7 @@ Imports:
     fracdiff,
     remotes,
     lmtest
+Remotes: robjhyndman/forecast
 Collate:
     'nvdmodel.R'
     'fitmodel.R'
