@@ -6,7 +6,7 @@ BaggedETSModel <- R6::R6Class(
     setFittedFcasted = function(){
       super$setFitted(forecast::baggedETS(super$getTrainingSet()))
       super$setFcasted(forecast::forecast(super$getFitted(),
-                                          h = private$fcast_period))
+                                          h = super$getFcastPeriod()))
     },
     buildModel = function(){
       self$setFittedFcasted()

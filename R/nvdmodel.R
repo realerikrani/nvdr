@@ -12,8 +12,7 @@ NVDModel <- R6::R6Class(
       }
       private$start_year <- start_year
       private$end_year <- end_year
-      private$train <- stats::window(cwe_ts, end = c(private$end_year - 1,
-                                                  private$fcast_period))
+      private$train <- stats::window(cwe_ts, end = c(private$end_year - 1, 12))
       private$test <- stats::window(cwe_ts, start = c(private$end_year, 1))
     },
     getCWE = function(){
@@ -33,6 +32,12 @@ NVDModel <- R6::R6Class(
     },
     getAssessment = function(){
       private$assessment
+    },
+    getFcastPeriod = function(){
+      private$fcast_period
+    },
+    getTSetChar = function(){
+      private$tset_char
     },
     areResidualsNotRandom = function(){
       private$residuals_not_random
@@ -55,13 +60,15 @@ NVDModel <- R6::R6Class(
     setFcasted = function(fcast_result){
       private$fcast <- fcast_result
     },
+    setFcastPeriod = function(period){
+      private$fcast_period <- period
+    },
     assessModel = function(){
-      tset_char <- "Test set"
       private$assessment <-
         forecast::accuracy(self$getFcasted(),
-                           self$getTestSet())[tset_char, private$measures]
-
-      },
+                           self$getTestSet())[self$getTSetChar(),
+                                              private$measures]
+    },
     testResidualsRandomnessBox = function(residuals, df){
       p_value <- stats::Box.test(
         residuals, fitdf = df, lag = private$residuals_lag(df, residuals),
@@ -107,6 +114,7 @@ NVDModel <- R6::R6Class(
     residuals_not_normal = FALSE,
     pi_ignored = FALSE,
     measures = c("MAE", "RMSE", "MAPE", "MASE"),
+    tset_char = "Test set",
 
     #' Lag finder
     #'

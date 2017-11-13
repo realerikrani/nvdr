@@ -4,16 +4,18 @@ NNARModel <- R6::R6Class(
 
   public = list(
     setFittedFcasted = function(fit_plain, fit_bc){
+      test <- super$getTestSet()
+      fcast_period <- super$getFcastPeriod()
       fcast_bc <- forecast::forecast(fit_bc, PI = pi_simulation,
-                                  h = private$fcast_period)
+                                     h = fcast_period)
       fcast <- forecast::forecast(fit_plain, PI = pi_simulation,
-                                          h = private$fcast_period)
-      if (forecast::accuracy(fcast)[, "RMSE"] <=
-          forecast::accuracy(fcast_bc)[, "RMSE"]) {
-        self$setFitted(fit_plain)
+                                  h = fcast_period)
+      if (forecast::accuracy(fcast, test)[super$getTSetChar(), "RMSE"] <=
+          forecast::accuracy(fcast_bc, test)[super$getTSetChar(), "RMSE"]) {
+        super$setFitted(fit_plain)
         super$setFcasted(fcast)
       } else {
-        self$setFitted(fit_bc)
+        super$setFitted(fit_bc)
         super$setFcasted(fcast_bc)
       }
     },

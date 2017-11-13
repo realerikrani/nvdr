@@ -10,7 +10,7 @@ output:
 nvdr
 ====
 
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Last-changedate](https://img.shields.io/badge/last%20change-2017--11--04-yellowgreen.svg)](/commits/master)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 R package *nvdr* provides forecasts of monthly mean CVSS scores of subsets of CWE vulnerabilities. It uses data from [National Vulnerability Database (NVD)](https://nvd.nist.gov/).
 

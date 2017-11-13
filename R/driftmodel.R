@@ -5,15 +5,16 @@ DriftModel <- R6::R6Class(
   public = list(
     buildModel = function(){
       train <- super$getTrainingSet()
-      fcast <- forecast::rwf(train, h = private$fcast_period, drift = TRUE)
-      fcast_bc <- forecast::rwf(train,
-                                h = private$fcast_period, drift = TRUE,
+      test <- super$getTestSet()
+      fcast_period <- super$getFcastPeriod()
+      fcast <- forecast::rwf(train, h = fcast_period, drift = TRUE)
+      fcast_bc <- forecast::rwf(train, h = fcast_period, drift = TRUE,
                                 lambda = forecast::BoxCox.lambda(train))
-      if (forecast::accuracy(fcast)[,"RMSE"] <=
-          forecast::accuracy(fcast_bc)[,"RMSE"]) {
-        private$fcast <-  fcast
+      if (forecast::accuracy(fcast, test)[super$getTSetChar(), "RMSE"] <=
+          forecast::accuracy(fcast_bc, test)[super$getTSetChar(), "RMSE"]) {
+        super$setFcasted(fcast)
       } else {
-        private$fcast <- fcast_bc
+        super$setFcasted(fcast_bc)
       }
       residuals <- zoo::na.approx(super$getFcasted()$residuals)
       super$testResidualsRandomnessBox(residuals, 1)

@@ -46,4 +46,3 @@ Collate:
     'xmlparser.R'
     'xmlparser_utils.R'
     'cvssforecaster.R'
-    'modeller.R'

@@ -5,9 +5,9 @@ TBATSModel <- R6::R6Class(
   public = list(
     setFittedFcasted = function(){
       # No need to output text about missing values or optimization convergence
-      private$fit <- suppressWarnings(forecast::tbats(super$getTrainingSet()))
-      private$fcast <- forecast::forecast(super$getFitted(),
-                                          h = private$fcast_period)
+      super$setFitted(suppressWarnings(forecast::tbats(super$getTrainingSet())))
+      super$setFcasted(forecast::forecast(super$getFitted(),
+                                          h = super$geFcastPeriod()))
     },
     buildModel = function(){
       self$setFittedFcasted()
