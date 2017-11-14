@@ -48,14 +48,26 @@ NVDModel <- R6::R6Class(
     isPiIgnored = function(){
       private$pi_ignored
     },
+    isBoxCoxApplied = function(){
+      private$box_cox_applied
+    },
+    isBootstrapNotUsed = function(){
+      private$bootstrap_not_used
+    },
     setResidualsNotRandom = function(testresult){
       private$residuals_not_random <- testresult
     },
     setResidualsNotNormal = function(testresult){
       private$residuals_not_normal <- testresult
     },
+    setBootstrapNotUsed = function(logical_value){
+      private$bootstrap_not_used <- logical_value
+    },
     setPiIgnored = function(logical_value){
       private$pi_ignored <- logical_value
+    },
+    setBoxCoxApplied = function(logical_value){
+      private$box_cox_applied <- logical_value
     },
     setFcasted = function(fcast_result){
       private$fcast <- fcast_result
@@ -90,7 +102,8 @@ NVDModel <- R6::R6Class(
        actual <- self$getTestSet()
        no_guide <- ggplot2::guides(colour = ggplot2::guide_legend(title = ""))
        actual_line <- forecast::autolayer(actual, series = "Actual")
-       if (self$areResidualsNotRandom() | self$areResidualsNotNormal() |
+       if (self$areResidualsNotRandom() |
+           (self$areResidualsNotNormal() & self$isBootstrapNotUsed()) |
            self$isPiIgnored()) {
          ylab <- ggplot2::ylab(paste("!", cwe_name, "CVSS"))
          ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide
@@ -112,9 +125,11 @@ NVDModel <- R6::R6Class(
     fcast_period = 12,
     residuals_not_random = FALSE,
     residuals_not_normal = FALSE,
+    bootstrap_not_used = TRUE,
     pi_ignored = FALSE,
     measures = c("MAE", "RMSE", "MAPE", "MASE"),
     tset_char = "Test set",
+    box_cox_applied = FALSE,
 
     #' Lag finder
     #'

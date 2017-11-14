@@ -15,10 +15,23 @@ NaiveModel <- R6::R6Class(
         super$setFcasted(fcast)
       } else {
         super$setFcasted(fcast_bc)
+        super$setBoxCoxApplied(T)
       }
       residuals <- zoo::na.approx(super$getFcasted()$residuals)
       super$testResidualsRandomnessBox(residuals, 0)
       super$testResidualsNormality(residuals)
+
+      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom()) {
+        if (super$isBoxCoxApplied()) {
+          super$setFcasted(forecast::naive(train, h = fcast_period,
+                                      lambda = forecast::BoxCox.lambda(train),
+                                      bootstrap = T))
+        } else {
+          super$setFcasted(forecast::naive(train, h = fcast_period,
+                                           bootstrap = T))
+        }
+        super$setBootstrapNotUsed(F)
+      }
     }
   )
 )

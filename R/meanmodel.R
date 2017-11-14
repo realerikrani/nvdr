@@ -15,10 +15,24 @@ MeanModel <- R6::R6Class(
         super$setFcasted(fcast)
       } else {
         super$setFcasted(fcast_bc)
+        super$setBoxCoxApplied(T)
       }
       residuals <- zoo::na.approx(super$getFcasted()$residuals)
       super$testResidualsRandomnessBox(residuals, 1)
       super$testResidualsNormality(residuals)
+
+      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom()) {
+        if (super$isBoxCoxApplied()) {
+          super$setFcasted(
+            forecast::meanf(train, h = fcast_period,
+                            lambda = forecast::BoxCox.lambda(train),
+                            bootstrap = T))
+        } else {
+          super$setFcasted(forecast::meanf(train, h = fcast_period,
+                                           bootstrap = T))
+        }
+        super$setBootstrapNotUsed(F)
+      }
     }
   )
 )

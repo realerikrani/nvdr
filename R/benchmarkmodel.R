@@ -85,6 +85,8 @@ BenchmarkModel <- R6::R6Class(
       super$setFcasted(m$getFcasted())
       super$setResidualsNotRandom(m$areResidualsNotRandom())
       super$setResidualsNotNormal(m$areResidualsNotNormal())
+      super$setBootstrapNotUsed(m$isBootstrapNotUsed())
+      super$setBoxCoxApplied(m$isBoxCoxApplied())
     }
     )
   )
