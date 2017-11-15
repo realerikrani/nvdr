@@ -22,6 +22,19 @@ FitModel <- R6::R6Class(
         self$setFitted(fit_bc)
         super$setFcasted(fcast_bc)
       }
+    },
+    considerBootstrap = function(fit_plain, fit_bc){
+      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom()) {
+        fcast_period <- super$getFcastPeriod()
+        if (super$isBoxCoxApplied()) {
+          super$setFcasted(forecast::forecast(fit_bc, h = fcast_period,
+                                              bootstrap = T))
+        } else {
+          super$setFcasted(forecast::forecast(fit_plain, h = fcast_period,
+                                              bootstrap = T))
+        }
+        super$setBootstrapNotUsed(F)
+      }
     }
   ),
 

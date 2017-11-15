@@ -18,6 +18,7 @@ ARIMAModel <- R6::R6Class(
       super$testResidualsRandomnessBox(residuals,
                                        length(super$getFitted()$coef))
       super$testResidualsNormality(residuals)
+      super$considerBootstrap(fit, fit_bc)
     }
   )
 )

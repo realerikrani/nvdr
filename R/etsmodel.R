@@ -11,6 +11,7 @@ ETSModel <- R6::R6Class(
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsRandomnessBox(residuals, length(super$getFitted()$par))
       super$testResidualsNormality(residuals)
+      super$considerBootstrap(fit, fit_bc)
     }
   )
 )
