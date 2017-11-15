@@ -21,6 +21,7 @@ FitModel <- R6::R6Class(
       } else {
         self$setFitted(fit_bc)
         super$setFcasted(fcast_bc)
+        super$setBoxCoxApplied(T)
       }
     },
     considerBootstrap = function(fit_plain, fit_bc){

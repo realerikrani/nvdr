@@ -17,6 +17,7 @@ NNARModel <- R6::R6Class(
       } else {
         super$setFitted(fit_bc)
         super$setFcasted(fcast_bc)
+        super$setBoxCoxApplied(T)
       }
     },
     buildModel = function(...){
