@@ -36,6 +36,7 @@ Collate:
     'tbatsmodel.R'
     'structtsmodel.R'
     'benchmarkmodel.R'
+    'fcastmodel.R'
     'meanmodel.R'
     'driftmodel.R'
     'naivemodel.R'

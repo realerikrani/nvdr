@@ -111,7 +111,11 @@ NVDModel <- R6::R6Class(
          ylab <- ggplot2::ylab(paste(cwe_name, "CVSS"))
          ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide
        }
-     }
+     },
+   rmseAccuracy = function(fcast){
+     test <- self$getTestSet()
+     forecast::accuracy(fcast, test)[self$getTSetChar(), "RMSE"]
+   }
   ),
 
   private = list(

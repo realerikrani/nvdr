@@ -10,12 +10,10 @@ FitModel <- R6::R6Class(
       private$fit <- fit_result
     },
     setFittedFcasted = function(fit_plain, fit_bc){
-      test <- super$getTestSet()
       fcast_period <- super$getFcastPeriod()
       fcast_bc <- forecast::forecast(fit_bc, h = fcast_period)
       fcast <- forecast::forecast(fit_plain, h = fcast_period)
-      if (forecast::accuracy(fcast, test)[super$getTSetChar(), "RMSE"] <=
-          forecast::accuracy(fcast_bc, test)[super$getTSetChar(), "RMSE"]) {
+      if (super$rmseAccuracy(fcast) <= super$rmseAccuracy(fcast_bc)) {
         self$setFitted(fit_plain)
         super$setFcasted(fcast)
       } else {
