@@ -29,7 +29,7 @@ BenchmarkModel <- R6::R6Class(
     snaive_model = NA,
 
     buildModels = function(){
-      cwe_ts <- ts(c(super$getTrainingSet(),super$getTestSet()),
+      cwe_ts <- ts(c(super$getTrainingSet(), super$getTestSet()),
                    start = start(super$getTrainingSet()),
                    frequency = frequency(super$getTrainingSet()))
       cwe <- super$getCWE()
@@ -55,13 +55,13 @@ BenchmarkModel <- R6::R6Class(
       snaive_assessment <- self$getSNaiveModel()$getAssessment()
       metrics <-
         data.table::rbindlist(lapply(names(mean_assessment), function(metric){
-          list(mean_assessment[metric],drift_assessment[metric],
-               naive_assessment[metric],snaive_assessment[metric])
+          list(mean_assessment[metric], drift_assessment[metric],
+               naive_assessment[metric], snaive_assessment[metric])
         }
         ))
       colnames(metrics) <- c("mean", "drift", "naive", "snaive")
       mins <- apply(metrics, 1, function(m){
-        ifelse(all(is.infinite(m)),"",colnames(metrics)[which.min(m)])
+        ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
       })
       best <- names(sort(summary(as.factor(mins)), decreasing = TRUE)[1])
       switch(

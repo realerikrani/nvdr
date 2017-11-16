@@ -96,7 +96,7 @@ CVSSForecaster <- R6::R6Class(
     setBenchmark = function(){
       private$benchmark <- private$model(self$getSeries(), BenchmarkModel)
     },
-    setARIMA = function(stepwise = TRUE, approximation = TRUE){
+    setARIMA = function(stepwise = T, approximation = T){
       private$arima <- private$model(self$getSeries(), ARIMAModel,
                                      stepwise = stepwise,
                                      approximation = approximation)
@@ -107,7 +107,7 @@ CVSSForecaster <- R6::R6Class(
     setTSLinear = function(){
       private$tslinear <- private$model(self$getSeries(), TSLinearModel)
     },
-    setNNAR = function(pi_simulation = FALSE){
+    setNNAR = function(pi_simulation = F){
       private$nnar <- private$model(self$getSeries(), NNARModel,
                                     pi_simulation = pi_simulation)
     },

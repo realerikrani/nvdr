@@ -9,7 +9,7 @@ ARIMAModel <- R6::R6Class(
       approx <- arguments$approximation
       train <- super$getTrainingSet()
       fit_bc <-
-        forecast::auto.arima(train,lambda = forecast::BoxCox.lambda(train),
+        forecast::auto.arima(train, lambda = forecast::BoxCox.lambda(train),
                              stepwise = stepw, approximation = approx)
       fit <- forecast::auto.arima(train, stepwise = stepw,
                                   approximation = approx)

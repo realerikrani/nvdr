@@ -10,8 +10,7 @@ NNARModel <- R6::R6Class(
                                      h = fcast_period)
       fcast <- forecast::forecast(fit_plain, PI = pi_simulation,
                                   h = fcast_period)
-      if (forecast::accuracy(fcast, test)[super$getTSetChar(), "RMSE"] <=
-          forecast::accuracy(fcast_bc, test)[super$getTSetChar(), "RMSE"]) {
+      if (super$rmseAccuracy(fcast) <= super$rmseAccuracy(fcast_bc)) {
         super$setFitted(fit_plain)
         super$setFcasted(fcast)
       } else {
@@ -24,7 +23,7 @@ NNARModel <- R6::R6Class(
       arguments <- list(...)
       pi_simulation <- arguments$pi_simulation
       train <- super$getTrainingSet()
-      fit_bc <- forecast::nnetar(train,lambda = forecast::BoxCox.lambda(train))
+      fit_bc <- forecast::nnetar(train, lambda = forecast::BoxCox.lambda(train))
       fit <- forecast::nnetar(train)
       self$setFittedFcasted(fit, fit_bc)
       if (pi_simulation) {

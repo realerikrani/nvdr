@@ -89,7 +89,7 @@ NVDModel <- R6::R6Class(
     },
     testResidualsRandomnessBreusch = function(residuals, df, fitted_model){
       lag <- private$residuals_lag(df, residuals)
-      p_value <- lmtest::bgtest(fitted_model,order = lag)$p.value
+      p_value <- lmtest::bgtest(fitted_model, order = lag)$p.value
       private$residuals_not_random <- (p_value <= 0.05)
     },
     testResidualsNormality = function(residuals){
@@ -127,13 +127,13 @@ NVDModel <- R6::R6Class(
     fcast = NA,
     assessment = NA,
     fcast_period = 12,
-    residuals_not_random = FALSE,
-    residuals_not_normal = FALSE,
-    bootstrap_not_used = TRUE,
-    pi_ignored = FALSE,
+    residuals_not_random = F,
+    residuals_not_normal = F,
+    bootstrap_not_used = T,
+    pi_ignored = F,
     measures = c("MAE", "RMSE", "MAPE", "MASE"),
     tset_char = "Test set",
-    box_cox_applied = FALSE,
+    box_cox_applied = F,
 
     #' Lag finder
     #'
@@ -145,7 +145,7 @@ NVDModel <- R6::R6Class(
     #' @keywords internal
     residuals_lag = function(df, residuals){
       freq <- frequency(residuals)
-      min(max(df + 3, ifelse(freq > 1, 2*freq, 10)),
+      min(max(df + 3, ifelse(freq > 1, 2 * freq, 10)),
           length(residuals) - 1)
     }
   )
