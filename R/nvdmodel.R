@@ -1,22 +1,24 @@
 NVDModel <- R6::R6Class(
   "NVDModel",
   public = list(
-    initialize = function(cwe, cwe_ts) {
-      stopifnot(is.character(cwe))
-      stopifnot(is.ts(cwe_ts))
+    initialize = function(cwe, cwe_ts, start_year, end_year, end_month) {
       private$cwe <- cwe
-      start_year <- as.integer(min(zoo::as.yearmon(stats::time(cwe_ts))))
-      end_year <- as.integer(max(zoo::as.yearmon(stats::time(cwe_ts))))
-      if (end_year - start_year < 2) {
-        stop("Please pick data covering at least two years.")
-      }
       private$start_year <- start_year
       private$end_year <- end_year
       private$train <- stats::window(cwe_ts, end = c(private$end_year - 1, 12))
-      private$test <- stats::window(cwe_ts, start = c(private$end_year, 1))
+      private$test <- stats::window(cwe_ts,
+                                    start = c(private$end_year, 1),
+                                    end = c(private$end_year, end_month))
+      self$setFcastPeriod(end_month)
     },
     getCWE = function(){
       private$cwe
+    },
+    getStartYear = function(){
+      private$start_year
+    },
+    getEndYear = function(){
+      private$end_year
     },
     getTrainingSet = function(){
       private$train
@@ -126,7 +128,7 @@ NVDModel <- R6::R6Class(
     test = NA,
     fcast = NA,
     assessment = NA,
-    fcast_period = 12,
+    fcast_period = NA,
     residuals_not_random = F,
     residuals_not_normal = F,
     bootstrap_not_used = T,

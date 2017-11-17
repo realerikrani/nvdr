@@ -57,32 +57,68 @@ CVSSForecaster <- R6::R6Class(
     getSeries = function(){
       private$cwes_ts
     },
-    getBenchmark = function(){
-      private$benchmark
+    getBenchmark = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$benchmark
+      } else {
+        private$getModelByCWE(private$benchmark, cwe_name)
+      }
     },
-    getARIMA = function(){
-      private$arima
+    getARIMA = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$arima
+      } else {
+        private$getModelByCWE(private$arima, cwe_name)
+      }
     },
-    getETS = function(){
-      private$ets
+    getETS = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$ets
+      } else {
+        private$getModelByCWE(private$ets, cwe_name)
+      }
     },
-    getTSLinear = function(){
-      private$tslinear
+    getTSLinear = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$tslinear
+      } else {
+        private$getModelByCWE(private$tslinear, cwe_name)
+      }
     },
-    getNNAR = function(){
-      private$nnar
+    getNNAR = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$nnar
+      } else {
+        private$getModelByCWE(private$nnar, cwe_name)
+      }
     },
-    getARFIMA = function(){
-      private$arfima
+    getARFIMA = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$arfima
+      } else {
+        private$getModelByCWE(private$arfima, cwe_name)
+      }
     },
-    getBaggedETS = function(){
-      private$bagged_ets
+    getBaggedETS = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$bagged_ets
+      } else {
+        private$getModelByCWE(private$bagged_ets, cwe_name)
+      }
     },
-    getTBATS = function(){
-      private$tbats
+    getTBATS = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$tbats
+      } else {
+        private$getModelByCWE(private$tbats, cwe_name)
+      }
     },
-    getStructTS = function(){
-      private$struct_ts
+    getStructTS = function(cwe_name){
+      if (missing(cwe_name)) {
+        private$struct_ts
+      } else {
+        private$getModelByCWE(private$struct_ts, cwe_name)
+      }
     },
     getPlots = function(model_list, row_no = 5, col_no = 2){
       private$plotter(model_list, row_no = row_no, col_no = col_no)
@@ -123,19 +159,25 @@ CVSSForecaster <- R6::R6Class(
     setStructTS = function(){
       private$struct_ts <- private$model(self$getSeries(), StructTSModel)
     },
-    setCWENamesAndSeries = function(start_year=2011, end_year=2016,
-                                    threshold = 100, min_score = 4.0,
-                                    period_threshold = 200){
-      cwes <- get_interesting_cwes(start_year, end_year, threshold, min_score,
-                                   period_threshold)
-      private$cwes <- colnames(cwes)
-      private$cwes_ts <- cwes
+    setCWEs = function(cwe_input){
+      private$start_year <- cwe_input$getStartYear()
+      private$end_year <- cwe_input$getEndYear()
+      if (private$end_year - private$start_year < 2) {
+        stop("Please pick data with two years of yearnumber difference.")
+      }
+      ts_data <- cwe_input$getTimeSeriesData()
+      private$cwes <- colnames(ts_data)
+      private$cwes_ts <- ts_data
+      private$end_month <- cwe_input$getEndMonth(as_number = T)
     }
     ),
 
   private = list(
     cwes = NA,
     cwes_ts = NA,
+    start_year = NA,
+    end_year = NA,
+    end_month = NA,
     benchmark = NA,
     arima = NA,
     ets = NA,
@@ -148,7 +190,10 @@ CVSSForecaster <- R6::R6Class(
 
     model = function(cwes_monthly_ts, m_class, ...){
       lapply(colnames(cwes_monthly_ts), function(cwe_name){
-        m <- m_class$new(cwe_name, stats::as.ts(cwes_monthly_ts[, cwe_name]))
+        m <- m_class$new(cwe_name,
+                         stats::as.ts(cwes_monthly_ts[, cwe_name]),
+                         private$start_year, private$end_year,
+                         private$end_month)
         m$buildModel(...)
         m$assessModel()
         m
@@ -185,6 +230,13 @@ CVSSForecaster <- R6::R6Class(
           )
         })
       )
+    },
+    getModelByCWE = function(model_list, cwe_name){
+      for (model in model_list) {
+        if (model$getCWE() == cwe_name) {
+            return(model)
+        }
+      }
     }
     )
   )

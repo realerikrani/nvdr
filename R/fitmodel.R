@@ -34,6 +34,19 @@ FitModel <- R6::R6Class(
         }
         super$setBootstrapNotUsed(F)
       }
+    },
+    executeUseModel = function(fit, fit_bc, fcast) {
+      train <- super$getTrainingSet()
+      new_train <- ts(c(train, super$getTestSet()), start = start(train),
+                      frequency = frequency(train))
+      if (super$isBoxCoxApplied()) {
+        ft <- do.call(fit_bc, list(new_train))
+      } else {
+        ft <- do.call(fit, list(new_train))
+      }
+      fc <- do.call(fcast, list(ft))
+      forecast::checkresiduals(fc, plot = T)
+      return(fc)
     }
   ),
 

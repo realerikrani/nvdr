@@ -12,6 +12,15 @@ ETSModel <- R6::R6Class(
       super$testResidualsRandomnessBox(residuals, length(super$getFitted()$par))
       super$testResidualsNormality(residuals)
       super$considerBootstrap(fit, fit_bc)
+    },
+    useModel = function(fcast_period){
+      fit_bc <- function(new_train) forecast::ets(
+        new_train, lambda = forecast::BoxCox.lambda(new_train))
+      fit <- function(new_train) forecast::ets(new_train)
+      fcast <- function(ft) forecast::forecast(ft,
+                                  h = fcast_period,
+                                  bootstrap = !super$isBootstrapNotUsed())
+      super$executeUseModel(fit, fit_bc, fcast)
     }
+    )
   )
-)

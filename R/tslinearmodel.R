@@ -15,6 +15,15 @@ TSLinearModel <- R6::R6Class(
         length(super$getFitted()$model$coefficients),
         super$getFitted())
       super$testResidualsNormality(residuals)
+    },
+    useModel = function(fcast_period){
+      fit_bc <- function(new_train) forecast::tslm(
+        new_train ~ trend + season,
+        lambda = forecast::BoxCox.lambda(new_train))
+      fit <- function(new_train) forecast::tslm(new_train ~ trend + season)
+      fcast <- function(ft) forecast::forecast(
+        ft, h = fcast_period, bootstrap = !super$isBootstrapNotUsed())
+      super$executeUseModel(fit, fit_bc, fcast)
     }
   )
 )

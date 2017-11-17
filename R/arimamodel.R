@@ -19,6 +19,17 @@ ARIMAModel <- R6::R6Class(
                                        length(super$getFitted()$coef))
       super$testResidualsNormality(residuals)
       super$considerBootstrap(fit, fit_bc)
+    },
+    useModel = function(fcast_period){
+      fit_bc <- function(new_train) forecast::auto.arima(
+        new_train, lambda = forecast::BoxCox.lambda(new_train),
+        stepwise = F, approximation = F)
+      fit <- function(new_train) forecast::auto.arima(new_train,
+                                                      stepwise = F,
+                                                      approximation = F)
+      fcast <- function(ft) forecast::forecast(
+        ft, h = fcast_period, bootstrap = !super$isBootstrapNotUsed())
+      super$executeUseModel(fit, fit_bc, fcast)
     }
   )
 )

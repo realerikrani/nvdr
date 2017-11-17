@@ -19,6 +19,17 @@ BenchmarkModel <- R6::R6Class(
       private$buildModels()
       private$assessModels()
       private$pickBestModel()
+    },
+    useModel = function(fcast_period){
+      if (length(self$getMeanModel()) > 1) {
+        self$getMeanModel()$useModel(fcast_period)
+      } else if (length(self$getDriftModel()) > 1) {
+        self$getDriftModel()$useModel(fcast_period)
+      } else if (length(self$getNaiveModel()) > 1) {
+        self$getNaiveModel()$useModel(fcast_period)
+      } else {
+        self$getSNaiveModel()$useModel(fcast_period)
+      }
     }
   ),
 
@@ -33,10 +44,17 @@ BenchmarkModel <- R6::R6Class(
                    start = start(super$getTrainingSet()),
                    frequency = frequency(super$getTrainingSet()))
       cwe <- super$getCWE()
-      private$mean_model <- MeanModel$new(cwe, cwe_ts)
-      private$drift_model <- DriftModel$new(cwe, cwe_ts)
-      private$naive_model <- NaiveModel$new(cwe, cwe_ts)
-      private$snaive_model <- SeasonalNaiveModel$new(cwe, cwe_ts)
+      start_year <- super$getStartYear()
+      end_year <- super$getEndYear()
+      end_month <- super$getFcastPeriod()
+      private$mean_model <- MeanModel$new(cwe, cwe_ts, start_year, end_year,
+                                          end_month)
+      private$drift_model <- DriftModel$new(cwe, cwe_ts, start_year, end_year,
+                                            end_month)
+      private$naive_model <- NaiveModel$new(cwe, cwe_ts, start_year, end_year,
+                                            end_month)
+      private$snaive_model <- SeasonalNaiveModel$new(cwe, cwe_ts, start_year,
+                                                     end_year, end_month)
       self$getMeanModel()$buildModel()
       self$getDriftModel()$buildModel()
       self$getNaiveModel()$buildModel()
@@ -68,15 +86,27 @@ BenchmarkModel <- R6::R6Class(
         best,
         "mean" = {
           private$pickedModelSetter(m = self$getMeanModel())
+          private$drift_model <- NA
+          private$naive_model <- NA
+          private$snaive_model <- NA
           },
         "drift" = {
           private$pickedModelSetter(m = self$getDriftModel())
+          private$mean_model <- NA
+          private$naive_model <- NA
+          private$snaive_model <- NA
           },
         "naive" = {
           private$pickedModelSetter(m = self$getNaiveModel())
+          private$drift_model <- NA
+          private$mean_model <- NA
+          private$snaive_model <- NA
           },
-        {
+          {
           private$pickedModelSetter(m = self$getSNaiveModel())
+          private$drift_model <- NA
+          private$naive_model <- NA
+          private$mean_model <- NA
           }
       )
       },

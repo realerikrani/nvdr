@@ -12,8 +12,6 @@ nvdr
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-R package *nvdr* provides forecasts of monthly mean CVSS scores of subsets of CWE vulnerabilities. It uses data from [National Vulnerability Database (NVD)](https://nvd.nist.gov/).
-
 Installation
 ------------
 
@@ -29,28 +27,48 @@ Examples
 
 ``` r
 library(nvdr)
+## Create a new CWE object.
+c <- CWE$new()
+## Set the data from CVE-2011 to CVE-2016 that come along with the package ...
+c$setBaseData()
+## ... or set data from selected XML Version 2.0 files downloaded from https://nvd.nist.gov/vuln/data-feeds#CVE_FEED .
+c$setBaseData(c("nvdcve-2.0-2013.xml","nvdcve-2.0-2015.xml"))
+## Get the year and month that mark the beginning of the interested time period.
+c$getStartYear()
+c$getStartMonth(as_number = T)
+## Get the year and month that mark the end of the interested time period. See how to change the end and start at the end of the README.
+c$getEndYear()
+c$getEndMonth(as_number = T)
+## Set monthly average CVSS time series for interesting CWEs ...
+c$setTimeSeriesData(c$getInterestingMonthlyData())
+## ... or set monthly average CVSS time series for specific CWEs.
+c$setTimeSeriesData(c$getMonthlyData(c("CWE-119","CWE-78")))
 ## Create new forecasting object.
 cf <- CVSSForecaster$new()
-
-## Find interesting CWE vulnerability categories between years 2011 and 2016.
-cf$setCWENamesAndSeries()
-
-## Set models (creates the forecasts models for the selected CWEs' time series and measures the accuracy).
+## Use the created CWE object with its time period and time series data.
+cf$setCWEs(c)
+## Create models and forecasts (creates the forecasts models for the selected CWEs' time series and measures the accuracy).
 cf$setARIMA()
 cf$setETS()
-
 ## Get forecast plots.
 cf$getPlots(cf$getARIMA())
 cf$getPlots(cf$getETS())
-
+## Get all created ARIMA models
+cf$getARIMA()
+## Get ARIMA model by CWE that is among the selected CWEs.
+cf$getARIMA("CWE-119")
+## Merge a potentially good ARIMA model's training and test data into new training data for forecasts of the unknown future of 9 months.
+cf$getARIMA("CWE-119")$useModel(9)
+## Save the unknown future results and plot them with ggplot2
+u <- cf$getARIMA("CWE-119")$useModel(9)
+ggplot2::autoplot(u)
 ## Get ARIMA model's AICc, AIC and BIC.
 cf$getInformationCriterions(cf$getARIMA())
-
 ## Get forecast accuracy measures.
 cf$getAssessments(cf$getARIMA())
 
-## Available
-   setBenchmark ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).
+## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
+   setBenchmark() ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).
    setARIMA()
    setETS()
    setTSLinear()
@@ -59,6 +77,28 @@ cf$getAssessments(cf$getARIMA())
    setBaggedETS()
    setTBATS()
    setStructTS()
+   getCWENames()
+   getSeries()
+   
+## Available for class CWE. See the source code to understand specific use cases.
+  getStartYear()
+  getEndYear(plus_one = F)
+  getStartMonth(as_number = F)
+  getEndMonth(as_number = F, plus_one = F)
+  getBaseData()
+  getTimeSeriesData()
+  setStartYear(year)
+  setEndYear(year)
+  setStartMonth(smonth)
+  setEndMonth(emonth)
+  setBaseData(files)
+  setTimeSeriesData(ts_data)
+  getAnalysisData()
+  getMostInstances(threshold = 100)
+  getMostCritical(min_score = 4.0)
+  getChanging(period_threshold = 200)
+  getInterestingMonthlyData(threshold = 100, min_score = 4.0, period_threshold = 200, as_monthly_ts = T)
+  getMonthlyData(desired_cwes)
 ```
 
 Look at the included binary data.
@@ -89,4 +129,4 @@ Furthermore, residuals are checked in *nvdr* by using the ideas from <https://gi
 Notes
 -----
 
-The package includes preprocessed data obtained from XML Version 2.0 data from <https://nvd.nist.gov/vuln/data-feeds#CVE_FEED> as of 7 October 2017 covering vulnerability entries from CVE-2011 to CVE-2016. Users have the possibility to extract data on their own as well with the package's function `get_nvd_entries`(for example, `get_nvd_entries(c("nvdcve-2.0-2013.xml","nvdcve-2.0-2015.xml"))`)
+The package includes preprocessed data obtained from XML Version 2.0 data from <https://nvd.nist.gov/vuln/data-feeds#CVE_FEED> as of 7 October 2017 covering vulnerability entries from CVE-2011 to CVE-2016. Users have the possibility to extract data on their own without creating any objects as well with the package's function `get_nvd_entries`(for example, `get_nvd_entries(c("nvdcve-2.0-2013.xml","nvdcve-2.0-2015.xml"))`).
