@@ -23,7 +23,7 @@ NNARModel <- R6::R6Class(
       arguments <- list(...)
       pi_simulation <- arguments$pi_simulation
       train <- super$getTrainingSet()
-      fit_bc <- forecast::nnetar(train, lambda = forecast::BoxCox.lambda(train))
+      fit_bc <- forecast::nnetar(train, lambda = super$findLambda(train))
       fit <- forecast::nnetar(train)
       self$setFittedFcasted(fit, fit_bc)
       if (pi_simulation) {

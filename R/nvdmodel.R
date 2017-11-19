@@ -117,6 +117,9 @@ NVDModel <- R6::R6Class(
    rmseAccuracy = function(fcast){
      test <- self$getTestSet()
      forecast::accuracy(fcast, test)[self$getTSetChar(), "RMSE"]
+   },
+   findLambda = function(training_set){
+     tryCatch(forecast::BoxCox.lambda(training_set), warning = function(w) NULL)
    }
   ),
 

@@ -81,7 +81,7 @@ BenchmarkModel <- R6::R6Class(
       mins <- apply(metrics, 1, function(m){
         ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
       })
-      best <- names(sort(summary(as.factor(mins)), decreasing = TRUE)[1])
+      best <- names(sort(summary(as.factor(mins)), decreasing = T)[1])
       switch(
         best,
         "mean" = {

@@ -38,7 +38,7 @@ MeanModel <- R6::R6Class(
       }
       if (box_cox) {
         forecast::meanf(train, h = fcast_period,
-                         lambda = forecast::BoxCox.lambda(train),
+                         lambda = super$findLambda(train),
                          bootstrap = bstrap)
       } else {
         forecast::meanf(train, h = fcast_period, bootstrap = bstrap)

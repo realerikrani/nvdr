@@ -126,38 +126,141 @@ CVSSForecaster <- R6::R6Class(
     getAssessments = function(model_list){
       private$measurer(model_list)
     },
+    getAllAssessments = function(){
+      models <- private$getBuiltModels()
+      cwe_names <- self$getCWENames()
+      Reduce(function(a, b) merge(a, b, all=T),
+             lapply(models, function(m){
+               data.table::rbindlist(lapply(cwe_names, function(cwe_name){
+                 specific_cwe_model <- private$getModelByCWE(m, cwe_name)
+                 measures <- specific_cwe_model$getAssessment()
+                 list(cwe = cwe_name, method = specific_cwe_model$getMethod(),
+                      MAE = measures["MAE"],RMSE = measures["RMSE"],
+                      MAPE = measures["MAPE"],MASE = measures["MASE"])
+               }
+               ))
+             }
+             ))
+    },
+    compareAssessments = function(model_list1, model_list2){
+      merged <- merge(self$getAssessments(model_list1),
+                      self$getAssessments(model_list2), by = "cwe")
+      print(paste(class(model_list1[[1]])[[1]], "<=",
+                  class(model_list2[[1]])[[1]]))
+      data.table::rbindlist(apply(merged, 1, function(assessrow){
+        cwe_name <- assessrow[1]
+        method1 = assessrow[2]
+        method2 = assessrow[7]
+        mae1 <- as.numeric(assessrow[3])
+        mae2 <- as.numeric(assessrow[8])
+        mae_best <- ifelse(mae1 < mae2, method1, method2)
+        rmse1 <- as.numeric(assessrow[4])
+        rmse2 <- as.numeric(assessrow[9])
+        rmse_best <- ifelse(rmse1 < rmse2, method1, method2)
+        mape1 <- as.numeric(assessrow[5])
+        mape2 <- as.numeric(assessrow[10])
+        mape_best <- ifelse(mape1 < mape2, method1, method2)
+        mase1 <- as.numeric(assessrow[6])
+        mase2 <- as.numeric(assessrow[11])
+        mase_best <- ifelse(mase1 < mase2, method1, method2)
+        best_vector <- c(mae_best, rmse_best, mape_best, mase_best)
+        best <- names(sort(summary(as.factor(best_vector)),
+                           decreasing = T)[1])
+        list(cwe = cwe_name,
+             method = ifelse(best == method1, best, "X"),
+             MAE = ifelse(mae1 < mae2, mae1, "X"),
+             RMSE = ifelse(rmse1 < rmse2, rmse1, "X"),
+             MAPE = ifelse(mape1 < mape2, mape1, "X"),
+             MASE = ifelse(mase1 < mase2, mase1, "X"))
+      }
+      ))
+    },
     getInformationCriterions = function(model_list){
       private$ic(model_list)
     },
-    setBenchmark = function(){
-      private$benchmark <- private$model(self$getSeries(), BenchmarkModel)
+    getBest = function(){
+      assessments <- self$getAllAssessments()
+      data.table::rbindlist(lapply(self$getCWENames(), function(cwe_name){
+        selection <- assessments[assessments$cwe == cwe_name, ]
+        best <- names(sort(summary(
+          as.factor(c(selection[which.min(selection$MAE), ]$method,
+                      selection[which.min(selection$RMSE), ]$method,
+                      selection[which.min(selection$MAPE), ]$method,
+                      selection[which.min(selection$MASE), ]$method))),
+          decreasing = T)[1])
+        list(cwe = cwe_name, method = best,
+             MAE = selection[selection$method == best, ]$MAE,
+             RMSE = selection[selection$method == best, ]$RMSE,
+             MAPE = selection[selection$method == best, ]$MAPE,
+             MASE = selection[selection$method == best, ]$MASE)
+      }
+      ))
     },
-    setARIMA = function(stepwise = T, approximation = T){
-      private$arima <- private$model(self$getSeries(), ARIMAModel,
-                                     stepwise = stepwise,
-                                     approximation = approximation)
+    setBenchmark = function(destroy = F){
+      if (destroy) {
+        private$benchmark <- NA
+      } else {
+        private$benchmark <- private$model(self$getSeries(), BenchmarkModel)
+      }
     },
-    setETS = function(){
-      private$ets <- private$model(self$getSeries(), ETSModel)
+    setARIMA = function(stepwise = T, approximation = T, destroy = F){
+      if (destroy) {
+        private$arima <- NA
+      } else {
+        private$arima <- private$model(self$getSeries(), ARIMAModel,
+                                       stepwise = stepwise,
+                                       approximation = approximation)
+      }
     },
-    setTSLinear = function(){
-      private$tslinear <- private$model(self$getSeries(), TSLinearModel)
+    setETS = function(destroy = F){
+      if (destroy) {
+        private$ets <- NA
+      } else {
+        private$ets <- private$model(self$getSeries(), ETSModel)
+      }
     },
-    setNNAR = function(pi_simulation = F){
-      private$nnar <- private$model(self$getSeries(), NNARModel,
-                                    pi_simulation = pi_simulation)
+    setTSLinear = function(destroy = F){
+      if (destroy) {
+        private$tslinear <- NA
+      } else {
+        private$tslinear <- private$model(self$getSeries(), TSLinearModel)
+      }
     },
-    setARFIMA = function(){
-      private$arfima <- private$model(self$getSeries(), ARFIMAModel)
+    setNNAR = function(pi_simulation = F, destroy = F){
+      if (destroy) {
+        private$nnar <- NA
+      } else {
+        private$nnar <- private$model(self$getSeries(), NNARModel,
+                                      pi_simulation = pi_simulation)
+      }
     },
-    setBaggedETS = function(){
-      private$bagged_ets <- private$model(self$getSeries(), BaggedETSModel)
+    setARFIMA = function(destroy = F){
+      if (destroy) {
+        private$arfima <- NA
+      } else {
+        private$arfima <- private$model(self$getSeries(), ARFIMAModel)
+      }
     },
-    setTBATS = function(){
-      private$tbats <- private$model(self$getSeries(), TBATSModel)
+    setBaggedETS = function(destroy = F){
+      if (destroy) {
+        private$bagged_ets <- NA
+      } else {
+        private$bagged_ets <- private$model(self$getSeries(), BaggedETSModel)
+      }
     },
-    setStructTS = function(){
-      private$struct_ts <- private$model(self$getSeries(), StructTSModel)
+    setTBATS = function(destroy = F){
+      if (destroy) {
+        private$tbats <- NA
+      } else {
+        private$tbats <- private$model(self$getSeries(), TBATSModel)
+      }
+    },
+    setStructTS = function(destroy = F){
+      if (destroy) {
+        private$struct_ts <- NA
+      } else {
+        private$struct_ts <- private$model(self$getSeries(), StructTSModel)
+      }
     },
     setCWEs = function(cwe_input){
       private$start_year <- cwe_input$getStartYear()
@@ -237,6 +340,22 @@ CVSSForecaster <- R6::R6Class(
             return(model)
         }
       }
+    },
+    getBuiltModels = function(){
+      models <- list(self$getBenchmark(), self$getARIMA(),  self$getETS(),
+                     self$getTSLinear(), self$getNNAR(), self$getARFIMA(),
+                     self$getBaggedETS(), self$getTBATS(), self$getStructTS())
+      set_models <- list()
+      for (index in c(1:length(models))) {
+        if (length(models[index]) == 1) {
+          if (!is.na(models[index])) {
+            set_models <- append(set_models, models[index])
+          }
+        } else {
+          set_models <- append(set_models, models[index])
+        }
+      }
+      set_models
     }
     )
   )

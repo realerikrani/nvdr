@@ -319,7 +319,7 @@ CWE <- R6::R6Class(
         }
         ))
       },
-    intoTimeSeries = function(chosen_vulns, vulns_by_month, start_year) {
+    intoTimeSeries = function(chosen_vulns, vulns_by_month) {
         published <- NULL
         vulns_by_month <- plyr::arrange(vulns_by_month, published)
         vulns_to_ts <-

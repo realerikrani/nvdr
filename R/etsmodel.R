@@ -5,7 +5,7 @@ ETSModel <- R6::R6Class(
   public = list(
     buildModel = function(){
       train <- super$getTrainingSet()
-      fit_bc <- forecast::ets(train, lambda = forecast::BoxCox.lambda(train))
+      fit_bc <- forecast::ets(train, lambda = super$findLambda(train))
       fit <- forecast::ets(train)
       super$setFittedFcasted(fit, fit_bc)
       residuals <- zoo::na.approx(super$getFitted()$residuals)
@@ -15,7 +15,7 @@ ETSModel <- R6::R6Class(
     },
     useModel = function(fcast_period){
       fit_bc <- function(new_train) forecast::ets(
-        new_train, lambda = forecast::BoxCox.lambda(new_train))
+        new_train, lambda = super$findLambda(new_train))
       fit <- function(new_train) forecast::ets(new_train)
       fcast <- function(ft) forecast::forecast(ft,
                                   h = fcast_period,

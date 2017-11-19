@@ -38,7 +38,7 @@ NaiveModel <- R6::R6Class(
       }
       if (box_cox) {
         forecast::naive(train, h = fcast_period,
-                         lambda = forecast::BoxCox.lambda(train),
+                         lambda = super$findLambda(train),
                          bootstrap = bstrap)
       } else {
         forecast::naive(train, h = fcast_period, bootstrap = bstrap)

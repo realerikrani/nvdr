@@ -9,7 +9,7 @@ ARIMAModel <- R6::R6Class(
       approx <- arguments$approximation
       train <- super$getTrainingSet()
       fit_bc <-
-        forecast::auto.arima(train, lambda = forecast::BoxCox.lambda(train),
+        forecast::auto.arima(train, lambda = super$findLambda(train),
                              stepwise = stepw, approximation = approx)
       fit <- forecast::auto.arima(train, stepwise = stepw,
                                   approximation = approx)
@@ -22,7 +22,7 @@ ARIMAModel <- R6::R6Class(
     },
     useModel = function(fcast_period){
       fit_bc <- function(new_train) forecast::auto.arima(
-        new_train, lambda = forecast::BoxCox.lambda(new_train),
+        new_train, lambda = super$findLambda(new_train),
         stepwise = F, approximation = F)
       fit <- function(new_train) forecast::auto.arima(new_train,
                                                       stepwise = F,
