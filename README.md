@@ -48,8 +48,9 @@ cf <- CVSSForecaster$new()
 ## Use the created CWE object with its time period and time series data.
 cf$setCWEs(c)
 ## Create models and forecasts (creates the forecasts models for the selected CWEs' time series and measures the accuracy).
-cf$setARIMA()
+cf$setBenchmark()
 cf$setETS()
+cf$setARIMA()
 ## Get forecast plots.
 cf$getPlots(cf$getARIMA())
 cf$getPlots(cf$getETS())
@@ -64,8 +65,14 @@ u <- cf$getARIMA("CWE-119")$useModel(9)
 ggplot2::autoplot(u)
 ## Get ARIMA model's AICc, AIC and BIC.
 cf$getInformationCriterions(cf$getARIMA())
-## Get forecast accuracy measures.
+## Get ARIMA forecast accuracy measures.
 cf$getAssessments(cf$getARIMA())
+## Compare Benchmark and ETS
+cf$compareAssessments(cf$getBenchmark(),cf$getETS())
+## Get assessments of the most accurate models that have been created so far for each CWE
+cf$getBest()
+## Get all forecast accuracy measures so far
+cf$getAllAssessments()
 
 ## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
    setBenchmark() ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).
@@ -79,6 +86,8 @@ cf$getAssessments(cf$getARIMA())
    setStructTS()
    getCWENames()
    getSeries()
+   getBest()
+   getAllAssessments()
    
 ## Available for class CWE. See the source code to understand specific use cases.
   getStartYear()
