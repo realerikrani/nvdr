@@ -26,13 +26,15 @@ FcastModel <- R6::R6Class(
         super$setBootstrapNotUsed(F)
       }
     },
-    executeUseModel = function(fcast, fcast_bc){
+    executeUseModel = function(fcast, fcast_bc, residuals_check){
       if (super$isBoxCoxApplied()) {
         fc <- do.call(fcast_bc, list())
       } else {
         fc <- do.call(fcast, list())
       }
-      forecast::checkresiduals(fc, plot = T)
+      if (residuals_check) {
+        forecast::checkresiduals(fc, plot = T)
+      }
       return(fc)
     }
   )

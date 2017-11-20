@@ -33,6 +33,9 @@ NNARModel <- R6::R6Class(
       }
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsNormality(residuals)
+    },
+    useModel = function(fcast_period, residuals_check = T){
+      warning("Not implemented!")
     }
   )
 )

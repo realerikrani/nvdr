@@ -11,7 +11,7 @@ MeanModel <- R6::R6Class(
                               function() private$applyForecast(box_cox = T,
                                                                bstrap = T))
     },
-    useModel = function(fcast_period){
+    useModel = function(fcast_period, residuals_check){
       train <- super$getTrainingSet()
       new_train <- ts(c(train, super$getTestSet()), start = start(train),
                       frequency = frequency(train))
@@ -24,7 +24,7 @@ MeanModel <- R6::R6Class(
         bstrap = !super$isBootstrapNotUsed(),
         use_train = new_train,
         use_period = fcast_period)
-      super$executeUseModel(fcast, fcast_bc)
+      super$executeUseModel(fcast, fcast_bc, residuals_check)
     }
   ),
   private = list(

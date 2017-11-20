@@ -129,7 +129,7 @@ CVSSForecaster <- R6::R6Class(
     getAllAssessments = function(){
       models <- private$getBuiltModels()
       cwe_names <- self$getCWENames()
-      Reduce(function(a, b) merge(a, b, all=T),
+      Reduce(function(a, b) merge(a, b, all = T),
              lapply(models, function(m){
                data.table::rbindlist(lapply(cwe_names, function(cwe_name){
                  specific_cwe_model <- private$getModelByCWE(m, cwe_name)
@@ -195,6 +195,46 @@ CVSSForecaster <- R6::R6Class(
              MASE = selection[selection$method == best, ]$MASE)
       }
       ))
+    },
+    useBest = function(fcast_period){
+      best_assessments <- self$getBest()[,c("cwe","method")]
+      apply(best_assessments, 1, function(cwe_and_method){
+        cwe_name <- cwe_and_method[[1]]
+        method_name <- cwe_and_method[[2]]
+        result <- NULL
+        name <- function(x) grepl(paste0("\\b",x,"\\b"), method_name,
+                                        ignore.case = T)
+        if (name("naive") | name("mean") | (name("random") & name("walk")
+                                            & name("drift"))) {
+          result <- self$getBenchmark(cwe_name)$useModel(fcast_period,
+                                               residuals_check = F)
+        } else if (name("linear") & name("regression")) {
+          result <- self$getTSLinear(cwe_name)$useModel(fcast_period,
+                                                        residuals_check = F)
+        } else if (name("ets")) {
+          result <- self$getETS(cwe_name)$useModel(fcast_period,
+                                                   residuals_check = F)
+        } else if (name("arima")) {
+          result <- self$getARIMA(cwe_name)$useModel(fcast_period,
+                                                     residuals_check = F)
+        }
+        list(cwe = cwe_name, future = result)
+      }
+      )
+    },
+    plotBest = function(bestInUse, row_no, col_no, compact = F){
+         plots <- lapply(c(1:length(bestInUse)), function(list_index){
+           ylabtitle <- ggplot2::ylab(bestInUse[[list_index]]$cwe)
+           values <- bestInUse[[list_index]]$future
+           if (compact) {
+             ggplot2::autoplot(values) + ylabtitle +
+               ggplot2::guides(fill = F) + ggplot2::ggtitle("")
+             } else {
+               ggplot2::autoplot(values) + ylabtitle
+             }
+           }
+           )
+         gridExtra::marrangeGrob(plots, nrow = row_no, ncol = col_no)
     },
     setBenchmark = function(destroy = F){
       if (destroy) {

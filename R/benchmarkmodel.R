@@ -20,15 +20,15 @@ BenchmarkModel <- R6::R6Class(
       private$assessModels()
       private$pickBestModel()
     },
-    useModel = function(fcast_period){
+    useModel = function(fcast_period, residuals_check = T){
       if (length(self$getMeanModel()) > 1) {
-        self$getMeanModel()$useModel(fcast_period)
+        self$getMeanModel()$useModel(fcast_period, residuals_check)
       } else if (length(self$getDriftModel()) > 1) {
-        self$getDriftModel()$useModel(fcast_period)
+        self$getDriftModel()$useModel(fcast_period, residuals_check)
       } else if (length(self$getNaiveModel()) > 1) {
-        self$getNaiveModel()$useModel(fcast_period)
+        self$getNaiveModel()$useModel(fcast_period, residuals_check)
       } else {
-        self$getSNaiveModel()$useModel(fcast_period)
+        self$getSNaiveModel()$useModel(fcast_period, residuals_check)
       }
     }
   ),

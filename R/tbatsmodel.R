@@ -17,6 +17,9 @@ TBATSModel <- R6::R6Class(
         length(super$getFitted()$parameters$vect) +
           NROW(super$getFitted()$seed.states))
       super$testResidualsNormality(residuals)
-      }
+    },
+    useModel = function(fcast_period, residuals_check = T){
+      warning("Not implemented!")
+    }
     )
   )

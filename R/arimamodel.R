@@ -20,7 +20,7 @@ ARIMAModel <- R6::R6Class(
       super$testResidualsNormality(residuals)
       super$considerBootstrap(fit, fit_bc)
     },
-    useModel = function(fcast_period){
+    useModel = function(fcast_period, residuals_check = T){
       fit_bc <- function(new_train) forecast::auto.arima(
         new_train, lambda = super$findLambda(new_train),
         stepwise = F, approximation = F)
@@ -29,7 +29,7 @@ ARIMAModel <- R6::R6Class(
                                                       approximation = F)
       fcast <- function(ft) forecast::forecast(
         ft, h = fcast_period, bootstrap = !super$isBootstrapNotUsed())
-      super$executeUseModel(fit, fit_bc, fcast)
+      super$executeUseModel(fit, fit_bc, fcast, residuals_check)
     }
   )
 )
