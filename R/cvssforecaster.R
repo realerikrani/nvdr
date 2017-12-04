@@ -178,7 +178,10 @@ CVSSForecaster <- R6::R6Class(
     getInformationCriterions = function(model_list){
       private$ic(model_list)
     },
-    getBest = function(){
+    getBestModelList = function(){
+      private$best_model_list
+    },
+    getBestAssessments = function(){
       assessments <- self$getAllAssessments()
       data.table::rbindlist(lapply(self$getCWENames(), function(cwe_name){
         selection <- assessments[assessments$cwe == cwe_name, ]
@@ -197,7 +200,7 @@ CVSSForecaster <- R6::R6Class(
       ))
     },
     useBest = function(fcast_period){
-      best_assessments <- self$getBest()[,c("cwe","method")]
+      best_assessments <- self$getBestAssessments()[,c("cwe","method")]
       apply(best_assessments, 1, function(cwe_and_method){
         cwe_name <- cwe_and_method[[1]]
         method_name <- cwe_and_method[[2]]
@@ -222,7 +225,7 @@ CVSSForecaster <- R6::R6Class(
       }
       )
     },
-    plotBest = function(bestInUse, row_no, col_no, compact = F){
+    plotUseBest = function(bestInUse, row_no, col_no, compact = F){
          plots <- lapply(c(1:length(bestInUse)), function(list_index){
            ylabtitle <- ggplot2::ylab(bestInUse[[list_index]]$cwe)
            values <- bestInUse[[list_index]]$future
@@ -312,6 +315,28 @@ CVSSForecaster <- R6::R6Class(
       private$cwes <- colnames(ts_data)
       private$cwes_ts <- ts_data
       private$end_month <- cwe_input$getEndMonth(as_number = T)
+    },
+    setBestModelList = function(){
+      best_assessments <- self$getBestAssessments()[,c("cwe","method")]
+      private$best_model_list <-
+        apply(best_assessments, 1, function(cwe_and_method){
+          cwe_name <- cwe_and_method[[1]]
+          method_name <- cwe_and_method[[2]]
+          result <- NULL
+          name <- function(x) grepl(paste0("\\b",x,"\\b"), method_name,
+                                    ignore.case = T)
+          if (name("naive") | name("mean") | (name("random") & name("walk")
+                                              & name("drift"))) {
+            return(self$getBenchmark(cwe_name))
+          } else if (name("linear") & name("regression")) {
+            return(self$getTSLinear(cwe_name))
+          } else if (name("ets")) {
+            return(self$getETS(cwe_name))
+          } else if (name("arima")) {
+            return(self$getARIMA(cwe_name))
+          }
+        }
+        )
     }
     ),
 
@@ -330,6 +355,7 @@ CVSSForecaster <- R6::R6Class(
     bagged_ets = NA,
     tbats = NA,
     struct_ts = NA,
+    best_model_list = NA,
 
     model = function(cwes_monthly_ts, m_class, ...){
       lapply(colnames(cwes_monthly_ts), function(cwe_name){

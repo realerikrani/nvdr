@@ -114,12 +114,24 @@ NVDModel <- R6::R6Class(
          ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide
        }
      },
-   rmseAccuracy = function(fcast){
+   compareCombinedAccuracy = function(fcast1, fcast2){
      test <- self$getTestSet()
-     forecast::accuracy(fcast, test)[self$getTSetChar(), "RMSE"]
+     accuracy1 <- forecast::accuracy(fcast1, test)[self$getTSetChar(),
+                                                   private$measures]
+     accuracy2 <- forecast::accuracy(fcast2, test)[self$getTSetChar(),
+                                                   private$measures]
+     metrics <- cbind(accuracy1, accuracy2)
+     ifelse(self$findBestColumn(metrics) == "accuracy1", T, F)
    },
    findLambda = function(training_set){
      tryCatch(forecast::BoxCox.lambda(training_set), warning = function(w) NULL)
+   },
+   findBestColumn = function(metrics) {
+     mins <- apply(metrics, 1, function(m){
+       ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
+     })
+     best <- names(sort(summary(as.factor(mins)), decreasing = T)[1])
+     best
    }
   ),
 

@@ -70,13 +70,17 @@ cf$getAssessments(cf$getARIMA())
 ## Compare Benchmark and ETS
 cf$compareAssessments(cf$getBenchmark(),cf$getETS())
 ## Get assessments of the most accurate models that have been created so far for each CWE
-cf$getBest()
+cf$getBestAssessments()
 ## Get all forecast accuracy measures so far
 cf$getAllAssessments()
+## Save a list of current models with best forecast accuracy.
+cf$setBestModelList
+## Plot the best models list
+cf$getPlots((cf$getBestModelList()))
 ## Merge the best models' (for each CWE based on the best forecast accuracy) training and test data into new training data for forecasts of the unknown future of 9 months.
 list_of_unseen_future_forecasts <- cf$useBest(9)
-## Plot the best models' new forecasts
-cf$plotBest(list_of_unseen_future_forecasts, row_no =5, col_no = 2)
+## Plot the used best models' new forecasts
+cf$plotUseBest(list_of_unseen_future_forecasts, row_no =5, col_no = 2)
 
 ## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
    setBenchmark() ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).

@@ -67,46 +67,32 @@ BenchmarkModel <- R6::R6Class(
       self$getSNaiveModel()$assessModel()
     },
     pickBestModel = function(){
-      mean_assessment <- self$getMeanModel()$getAssessment()
-      drift_assessment <- self$getDriftModel()$getAssessment()
-      naive_assessment <- self$getNaiveModel()$getAssessment()
-      snaive_assessment <- self$getSNaiveModel()$getAssessment()
-      metrics <-
-        data.table::rbindlist(lapply(names(mean_assessment), function(metric){
-          list(mean_assessment[metric], drift_assessment[metric],
-               naive_assessment[metric], snaive_assessment[metric])
-        }
-        ))
-      colnames(metrics) <- c("mean", "drift", "naive", "snaive")
-      mins <- apply(metrics, 1, function(m){
-        ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
-      })
-      best <- names(sort(summary(as.factor(mins)), decreasing = T)[1])
+      metrics <- cbind("mean" = self$getMeanModel()$getAssessment(),
+                       "drift" = self$getDriftModel()$getAssessment(),
+                       "naive" = self$getNaiveModel()$getAssessment(),
+                       "snaive" = self$getSNaiveModel()$getAssessment())
+      best <- super$findBestColumn(metrics)
       switch(
         best,
         "mean" = {
           private$pickedModelSetter(m = self$getMeanModel())
-          private$drift_model <- NA
-          private$naive_model <- NA
-          private$snaive_model <- NA
+          private$drift_model <- private$naive_model <-
+            private$snaive_model <- NA
           },
         "drift" = {
           private$pickedModelSetter(m = self$getDriftModel())
-          private$mean_model <- NA
-          private$naive_model <- NA
-          private$snaive_model <- NA
+          private$mean_model <- private$naive_model <-
+            private$snaive_model <- NA
           },
         "naive" = {
           private$pickedModelSetter(m = self$getNaiveModel())
-          private$drift_model <- NA
-          private$mean_model <- NA
-          private$snaive_model <- NA
+          private$drift_model <- private$mean_model <-
+            private$snaive_model <- NA
           },
           {
           private$pickedModelSetter(m = self$getSNaiveModel())
-          private$drift_model <- NA
-          private$naive_model <- NA
-          private$mean_model <- NA
+          private$drift_model <- private$naive_model <-
+            private$mean_model <- NA
           }
       )
       },

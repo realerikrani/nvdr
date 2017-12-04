@@ -4,7 +4,7 @@ FcastModel <- R6::R6Class(
 
   public = list(
     considerBoxCox = function(fcast, fcast_bc){
-      if (super$rmseAccuracy(fcast) <= super$rmseAccuracy(fcast_bc)) {
+      if (super$compareCombinedAccuracy(fcast, fcast_bc)) {
         super$setFcasted(fcast)
       } else {
         super$setFcasted(fcast_bc)
