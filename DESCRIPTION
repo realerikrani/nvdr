@@ -22,9 +22,11 @@ Imports:
     R6,
     fracdiff,
     remotes,
-    lmtest
+    lmtest,
+    tibble
 Remotes: robjhyndman/forecast
 Collate:
+    'global_utils.R'
     'nvdmodel.R'
     'fitmodel.R'
     'etsmodel.R'

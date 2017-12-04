@@ -121,17 +121,10 @@ NVDModel <- R6::R6Class(
      accuracy2 <- forecast::accuracy(fcast2, test)[self$getTSetChar(),
                                                    private$measures]
      metrics <- cbind(accuracy1, accuracy2)
-     ifelse(self$findBestColumn(metrics) == "accuracy1", T, F)
+     ifelse(nvdr::findBestColumn(metrics) == "accuracy1", T, F)
    },
    findLambda = function(training_set){
      tryCatch(forecast::BoxCox.lambda(training_set), warning = function(w) NULL)
-   },
-   findBestColumn = function(metrics) {
-     mins <- apply(metrics, 1, function(m){
-       ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
-     })
-     best <- names(sort(summary(as.factor(mins)), decreasing = T)[1])
-     best
    }
   ),
 

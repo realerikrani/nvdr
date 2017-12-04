@@ -135,8 +135,8 @@ CVSSForecaster <- R6::R6Class(
                  specific_cwe_model <- private$getModelByCWE(m, cwe_name)
                  measures <- specific_cwe_model$getAssessment()
                  list(cwe = cwe_name, method = specific_cwe_model$getMethod(),
-                      MAE = measures["MAE"],RMSE = measures["RMSE"],
-                      MAPE = measures["MAPE"],MASE = measures["MASE"])
+                      MAE = measures["MAE"], RMSE = measures["RMSE"],
+                      MAPE = measures["MAPE"], MASE = measures["MASE"])
                }
                ))
              }
@@ -149,8 +149,8 @@ CVSSForecaster <- R6::R6Class(
                   class(model_list2[[1]])[[1]]))
       data.table::rbindlist(apply(merged, 1, function(assessrow){
         cwe_name <- assessrow[1]
-        method1 = assessrow[2]
-        method2 = assessrow[7]
+        method1 <- assessrow[2]
+        method2 <- assessrow[7]
         mae1 <- as.numeric(assessrow[3])
         mae2 <- as.numeric(assessrow[8])
         mae_best <- ifelse(mae1 < mae2, method1, method2)
@@ -184,13 +184,12 @@ CVSSForecaster <- R6::R6Class(
     getBestAssessments = function(){
       assessments <- self$getAllAssessments()
       data.table::rbindlist(lapply(self$getCWENames(), function(cwe_name){
-        selection <- assessments[assessments$cwe == cwe_name, ]
-        best <- names(sort(summary(
-          as.factor(c(selection[which.min(selection$MAE), ]$method,
-                      selection[which.min(selection$RMSE), ]$method,
-                      selection[which.min(selection$MAPE), ]$method,
-                      selection[which.min(selection$MASE), ]$method))),
-          decreasing = T)[1])
+        selection <- as.data.frame(assessments[assessments$cwe == cwe_name, ])
+        metrics <- t(tibble::column_to_rownames(
+          as.data.frame(selection[,
+                                  c("method", "MAE", "RMSE", "MAPE", "MASE")]),
+          var = "method"))
+        best <- nvdr::findBestColumn(metrics)
         list(cwe = cwe_name, method = best,
              MAE = selection[selection$method == best, ]$MAE,
              RMSE = selection[selection$method == best, ]$RMSE,
@@ -200,27 +199,28 @@ CVSSForecaster <- R6::R6Class(
       ))
     },
     useBest = function(fcast_period){
-      best_assessments <- self$getBestAssessments()[,c("cwe","method")]
+      best_assessments <- self$getBestAssessments()[, c("cwe", "method")]
       apply(best_assessments, 1, function(cwe_and_method){
         cwe_name <- cwe_and_method[[1]]
         method_name <- cwe_and_method[[2]]
+        compare <- nvdr::NameComparer$new(method_name)
         result <- NULL
-        name <- function(x) grepl(paste0("\\b",x,"\\b"), method_name,
-                                        ignore.case = T)
-        if (name("naive") | name("mean") | (name("random") & name("walk")
-                                            & name("drift"))) {
+        if (compare$isName("naive") | compare$isName("mean") |
+            (compare$isName("random") & compare$isName("walk") &
+             compare$isName("drift"))) {
           result <- self$getBenchmark(cwe_name)$useModel(fcast_period,
                                                residuals_check = F)
-        } else if (name("linear") & name("regression")) {
+        } else if (compare$isName("linear") & compare$isName("regression")) {
           result <- self$getTSLinear(cwe_name)$useModel(fcast_period,
                                                         residuals_check = F)
-        } else if (name("ets")) {
+        } else if (compare$isName("ets")) {
           result <- self$getETS(cwe_name)$useModel(fcast_period,
                                                    residuals_check = F)
-        } else if (name("arima")) {
+        } else if (compare$isName("arima")) {
           result <- self$getARIMA(cwe_name)$useModel(fcast_period,
                                                      residuals_check = F)
         }
+        rm(compare)
         list(cwe = cwe_name, future = result)
       }
       )
@@ -317,24 +317,27 @@ CVSSForecaster <- R6::R6Class(
       private$end_month <- cwe_input$getEndMonth(as_number = T)
     },
     setBestModelList = function(){
-      best_assessments <- self$getBestAssessments()[,c("cwe","method")]
+      best_assessments <- self$getBestAssessments()[, c("cwe", "method")]
       private$best_model_list <-
         apply(best_assessments, 1, function(cwe_and_method){
           cwe_name <- cwe_and_method[[1]]
           method_name <- cwe_and_method[[2]]
+          compare <- nvdr::NameComparer$new(method_name)
           result <- NULL
-          name <- function(x) grepl(paste0("\\b",x,"\\b"), method_name,
-                                    ignore.case = T)
-          if (name("naive") | name("mean") | (name("random") & name("walk")
-                                              & name("drift"))) {
-            return(self$getBenchmark(cwe_name))
-          } else if (name("linear") & name("regression")) {
-            return(self$getTSLinear(cwe_name))
-          } else if (name("ets")) {
-            return(self$getETS(cwe_name))
-          } else if (name("arima")) {
-            return(self$getARIMA(cwe_name))
+          if (compare$isName("naive") | compare$isName("mean") |
+              (compare$isName("random") &  compare$isName("walk")
+               & compare$isName("drift"))
+              ) {
+            result <- self$getBenchmark(cwe_name)
+          } else if (compare$isName("linear") & compare$isName("regression")) {
+            result <- self$getTSLinear(cwe_name)
+          } else if (compare$isName("ets")) {
+            result < self$getETS(cwe_name)
+          } else if (compare$isName("arima")) {
+            result <- self$getARIMA(cwe_name)
           }
+          rm(compare)
+          result
         }
         )
     }

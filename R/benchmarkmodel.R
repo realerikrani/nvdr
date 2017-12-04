@@ -71,7 +71,7 @@ BenchmarkModel <- R6::R6Class(
                        "drift" = self$getDriftModel()$getAssessment(),
                        "naive" = self$getNaiveModel()$getAssessment(),
                        "snaive" = self$getSNaiveModel()$getAssessment())
-      best <- super$findBestColumn(metrics)
+      best <- nvdr::findBestColumn(metrics)
       switch(
         best,
         "mean" = {
