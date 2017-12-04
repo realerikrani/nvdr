@@ -219,6 +219,12 @@ CVSSForecaster <- R6::R6Class(
         } else if (compare$isName("arima")) {
           result <- self$getARIMA(cwe_name)$useModel(fcast_period,
                                                      residuals_check = F)
+        } else if (compare$isName("arfima")) {
+          result <- self$getARFIMA(cwe_name)$useModel(fcast_period,
+                                                      residuals_check = F)
+        } else if (compare$isName("baggedModel")) {
+          result <- self$getBaggedETS(cwe_name)$useModel(fcast_period,
+                                                         residuals_check = F)
         }
         rm(compare)
         list(cwe = cwe_name, future = result)
@@ -335,6 +341,10 @@ CVSSForecaster <- R6::R6Class(
             result < self$getETS(cwe_name)
           } else if (compare$isName("arima")) {
             result <- self$getARIMA(cwe_name)
+          } else if (compare$isName("arfima")) {
+            result <- self$getARFIMA(cwe_name)
+          } else if (compare$isName("baggedModel")) {
+            result <- self$getBaggedETS(cwe_name)
           }
           rm(compare)
           result

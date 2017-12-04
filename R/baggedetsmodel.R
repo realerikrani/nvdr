@@ -4,7 +4,8 @@ BaggedETSModel <- R6::R6Class(
 
   public = list(
     setFittedFcasted = function(){
-      super$setFitted(forecast::baggedETS(super$getTrainingSet()))
+      super$setFitted(forecast::baggedModel(super$getTrainingSet(),
+                                            fn = "ets"))
       super$setFcasted(forecast::forecast(super$getFitted(),
                                           h = super$getFcastPeriod()))
     },
@@ -12,10 +13,12 @@ BaggedETSModel <- R6::R6Class(
       self$setFittedFcasted()
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsNormality(residuals)
-      super$setPiIgnored(TRUE)
+      super$setPiIgnored(T)
     },
     useModel = function(fcast_period, residuals_check = T){
-      warning("Not implemented!")
+      fit <- function(new_train) forecast::baggedModel(new_train, fn = "ets")
+      fcast <- function(ft) forecast::forecast(ft, h = fcast_period)
+      super$executeUseModel(fit, NULL, fcast, residuals_check)
     }
     )
   )

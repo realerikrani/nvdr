@@ -10,10 +10,14 @@ ARFIMAModel <- R6::R6Class(
       super$setFittedFcasted(fit, fit_bc)
       residuals <- zoo::na.approx(super$getFitted()$residuals)
       super$testResidualsNormality(residuals)
-      super$setPiIgnored(TRUE)
+      super$setPiIgnored(T)
     },
     useModel = function(fcast_period, residuals_check = T){
-      warning("Not implemented!")
+      fit_bc <- function(new_train) forecast::arfima(
+        new_train, lambda = super$findLambda(new_train))
+      fit <- function(new_train) forecast::arfima(new_train)
+      fcast <- function(ft) forecast::forecast(ft, h = fcast_period)
+      super$executeUseModel(fit, fit_bc, fcast, residuals_check)
     }
   )
 )

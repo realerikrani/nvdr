@@ -83,7 +83,7 @@ cf$getBestAssessments()
 ## Get all forecast accuracy measures so far
 cf$getAllAssessments()
 ## Save a list of current models with best forecast accuracy.
-cf$setBestModelList
+cf$setBestModelList()
 ## Plot the best models list
 cf$getPlots((cf$getBestModelList()))
 ## Merge the best models' (for each CWE based on the best forecast accuracy) training and test data into new training data for forecasts of the unknown future of 9 months.
