@@ -3,39 +3,32 @@ NNARModel <- R6::R6Class(
   inherit = FitModel,
 
   public = list(
-    setFittedFcasted = function(fit_plain, fit_bc){
-      test <- super$getTestSet()
-      fcast_period <- super$getFcastPeriod()
-      fcast_bc <- forecast::forecast(fit_bc, PI = pi_simulation,
-                                     h = fcast_period)
-      fcast <- forecast::forecast(fit_plain, PI = pi_simulation,
-                                  h = fcast_period)
-      if (super$rmseAccuracy(fcast) <= super$rmseAccuracy(fcast_bc)) {
-        super$setFitted(fit_plain)
-        super$setFcasted(fcast)
-      } else {
-        super$setFitted(fit_bc)
-        super$setFcasted(fcast_bc)
-        super$setBoxCoxApplied(T)
-      }
-    },
     buildModel = function(...){
-      arguments <- list(...)
-      pi_simulation <- arguments$pi_simulation
-      train <- super$getTrainingSet()
-      fit_bc <- forecast::nnetar(train, lambda = super$findLambda(train))
-      fit <- forecast::nnetar(train)
-      self$setFittedFcasted(fit, fit_bc)
-      if (pi_simulation) {
-        super$setPiIgnored(FALSE)
-      } else {
-        super$setPiIgnored(TRUE)
-      }
-      residuals <- zoo::na.approx(super$getFitted()$residuals)
-      super$testResidualsNormality(residuals)
+      super$setFittedFcasted(private$fitNNAR, private$testRandomness,
+                             private$fcastNNAR, ...)
     },
-    useModel = function(fcast_period, residuals_check = T){
-      warning("Not implemented!")
+    useModel = function(fcast_period, ...){
+      super$executeUseModel(private$fitNNAR, private$fcastNNAR, fcast_period,
+                            ...)
+    }
+  ),
+  private = list(
+    testRandomness = function(residuals) NULL,
+    fitNNAR = function(train, ...){
+      forecast::nnetar(train, lambda = super$findLambda(train))
+    },
+    fcastNNAR = function(fitted_model, fcast_period, ...){
+      arguments <- list(...)
+      btstrp <- arguments$bootstrap
+      pi <- arguments$pi_simulation
+      if (length(pi) > 1) {
+        super$setPiIgnored(F)
+      } else {
+        super$setPiIgnored(T)
+      }
+      forecast::forecast(fitted_model, h = fcast_period,
+                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F),
+                         PI = pi)
     }
   )
 )

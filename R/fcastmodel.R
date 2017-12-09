@@ -8,17 +8,18 @@ FcastModel <- R6::R6Class(
         super$setFcasted(fcast)
       } else {
         super$setFcasted(fcast_bc)
-        super$setBoxCoxApplied(T)
+        self$setBoxCoxApplied(T)
       }
     },
     analyseResiduals = function(df){
-      residuals <- zoo::na.approx(super$getFcasted()$residuals)
-      super$testResidualsRandomnessBox(residuals, df)
-      super$testResidualsNormality(residuals)
+      residuals <- super$getResiduals(super$getFcasted())
+      super$setResidualsNotRandom(
+        super$testResidualsRandomnessBox(residuals, df))
+      super$setResidualsNotNormal(super$testResidualsNormality(residuals))
     },
     considerBootstrap = function(fcast, fcast_bc){
       if (super$areResidualsNotNormal() & !super$areResidualsNotRandom()) {
-        if (super$isBoxCoxApplied()) {
+        if (self$isBoxCoxApplied()) {
           super$setFcasted(do.call(fcast_bc, list()))
         } else {
           super$setFcasted(do.call(fcast, list()))
@@ -26,16 +27,23 @@ FcastModel <- R6::R6Class(
         super$setBootstrapNotUsed(F)
       }
     },
-    executeUseModel = function(fcast, fcast_bc, residuals_check){
-      if (super$isBoxCoxApplied()) {
-        fc <- do.call(fcast_bc, list())
+    executeUseModel = function(fcast, fcast_bc){
+      new_train <- super$getMergedTrainTestSet()
+      if (self$isBoxCoxApplied()) {
+        fc <- do.call(fcast_bc, list(new_train))
       } else {
-        fc <- do.call(fcast, list())
-      }
-      if (residuals_check) {
-        forecast::checkresiduals(fc, plot = T)
+        fc <- do.call(fcast, list(new_train))
       }
       return(fc)
+    },
+    isBoxCoxApplied = function(){
+      private$box_cox_applied
+    },
+    setBoxCoxApplied = function(logical_value){
+      private$box_cox_applied <- logical_value
     }
+  ),
+  private = list(
+    box_cox_applied = F
   )
 )

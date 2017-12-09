@@ -9,45 +9,33 @@ FitModel <- R6::R6Class(
     setFitted = function(fit_result){
       private$fit <- fit_result
     },
-    setFittedFcasted = function(fit_plain, fit_bc){
-      fcast_period <- super$getFcastPeriod()
-      fcast_bc <- forecast::forecast(fit_bc, h = fcast_period)
-      fcast <- forecast::forecast(fit_plain, h = fcast_period)
-      if (super$compareCombinedAccuracy(fcast, fcast_bc)) {
-        self$setFitted(fit_plain)
-        super$setFcasted(fcast)
-      } else {
-        self$setFitted(fit_bc)
-        super$setFcasted(fcast_bc)
-        super$setBoxCoxApplied(T)
-      }
-    },
-    considerBootstrap = function(fit_plain, fit_bc){
-      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom()) {
-        fcast_period <- super$getFcastPeriod()
-        if (super$isBoxCoxApplied()) {
-          super$setFcasted(forecast::forecast(fit_bc, h = fcast_period,
-                                              bootstrap = T))
-        } else {
-          super$setFcasted(forecast::forecast(fit_plain, h = fcast_period,
-                                              bootstrap = T))
-        }
+    setFittedFcasted = function(fit_function, test_randomness, fcast_function,
+                                ...){
+      self$setFitted(do.call(fit_function, list(super$getTrainingSet(), ...)))
+      residuals <- super$getResiduals(self$getFitted())
+      do.call(test_randomness, list(residuals))
+      super$setResidualsNotNormal(super$testResidualsNormality(residuals))
+      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom() &
+          !super$isPiIgnored()) {
+        super$setFcasted(do.call(fcast_function,
+                                 list(self$getFitted(),
+                                      bootstrap = T,
+                                      fcast_period = super$getFcastPeriod(),
+                                      ...)))
         super$setBootstrapNotUsed(F)
+      } else {
+        super$setFcasted(do.call(fcast_function,
+                                 list(self$getFitted(),
+                                      fcast_period = super$getFcastPeriod(),
+                                      ...)))
       }
     },
-    executeUseModel = function(fit, fit_bc, fcast, residuals_check) {
-      train <- super$getTrainingSet()
-      new_train <- ts(c(train, super$getTestSet()), start = start(train),
-                      frequency = frequency(train))
-      if (super$isBoxCoxApplied()) {
-        ft <- do.call(fit_bc, list(new_train))
-      } else {
-        ft <- do.call(fit, list(new_train))
-      }
-      fc <- do.call(fcast, list(ft))
-      if (residuals_check) {
-        forecast::checkresiduals(fc, plot = T)
-      }
+    executeUseModel = function(fit_function, fcast_function,
+                               fcast_period, ...) {
+      ft <- do.call(fit_function, list(super$getMergedTrainTestSet(), ...))
+      fc <- do.call(fcast_function,
+                    list(ft, fcast_period = fcast_period,
+                         bootstrap = !super$isBootstrapNotUsed(), ...))
       return(fc)
     }
   ),

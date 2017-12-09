@@ -198,7 +198,8 @@ CVSSForecaster <- R6::R6Class(
       }
       ))
     },
-    useBest = function(fcast_period){
+    useBest = function(fcast_period, arima_stepwise = F, arima_approx = F,
+                       nnar_pi_sim = T){
       best_assessments <- self$getBestAssessments()[, c("cwe", "method")]
       apply(best_assessments, 1, function(cwe_and_method){
         cwe_name <- cwe_and_method[[1]]
@@ -208,42 +209,66 @@ CVSSForecaster <- R6::R6Class(
         if (compare$isName("naive") | compare$isName("mean") |
             (compare$isName("random") & compare$isName("walk") &
              compare$isName("drift"))) {
-          result <- self$getBenchmark(cwe_name)$useModel(fcast_period,
-                                               residuals_check = F)
+          result <- self$getBenchmark(cwe_name)$useModel(fcast_period)
         } else if (compare$isName("linear") & compare$isName("regression")) {
-          result <- self$getTSLinear(cwe_name)$useModel(fcast_period,
-                                                        residuals_check = F)
+          result <- self$getTSLinear(cwe_name)$useModel(fcast_period)
         } else if (compare$isName("ets")) {
-          result <- self$getETS(cwe_name)$useModel(fcast_period,
-                                                   residuals_check = F)
+          result <- self$getETS(cwe_name)$useModel(fcast_period)
         } else if (compare$isName("arima")) {
-          result <- self$getARIMA(cwe_name)$useModel(fcast_period,
-                                                     residuals_check = F)
+          result <- self$getARIMA(cwe_name)$useModel(
+            fcast_period, stepwise = arima_stepwise,
+            approximation = arima_approx)
         } else if (compare$isName("arfima")) {
-          result <- self$getARFIMA(cwe_name)$useModel(fcast_period,
-                                                      residuals_check = F)
+          result <- self$getARFIMA(cwe_name)$useModel(fcast_period)
         } else if (compare$isName("baggedModel")) {
-          result <- self$getBaggedETS(cwe_name)$useModel(fcast_period,
-                                                         residuals_check = F)
+          result <- self$getBaggedETS(cwe_name)$useModel(fcast_period)
+        } else if (compare$isName("nnar")) {
+          result <- self$getNNAR(cwe_name)$useModel(fcast_period,
+                                                    pi_simulation = nnar_pi_sim)
+        } else if (compare$isName("basic") & compare$isName("structural")) {
+          result <- self$getStructTS(cwe_name)$useModel(fcast_period)
+        } else if (compare$isName("bats") | compare$isName("tbats")) {
+          result <- self$getTBATS(cwe_name)$useModel(fcast_period)
         }
         rm(compare)
         list(cwe = cwe_name, future = result)
       }
       )
     },
-    plotUseBest = function(bestInUse, row_no, col_no, compact = F){
+    plotUseBest = function(bestInUse, row_no, col_no, compact = F, actual){
+        if (missing(actual)) {
+          actual_line = function(actual, cwe) NULL
+        } else {
+          actual_line = function(actual, cwe) forecast::autolayer(
+            actual[, cwe], series = "Actual")
+        }
          plots <- lapply(c(1:length(bestInUse)), function(list_index){
-           ylabtitle <- ggplot2::ylab(bestInUse[[list_index]]$cwe)
+           cwe_name <- bestInUse[[list_index]]$cwe
+           ylabtitle <- ggplot2::ylab(cwe_name)
            values <- bestInUse[[list_index]]$future
+           aline <- actual_line(actual, cwe_name)
            if (compact) {
              ggplot2::autoplot(values) + ylabtitle +
-               ggplot2::guides(fill = F) + ggplot2::ggtitle("")
+               ggplot2::guides(fill = F) + ggplot2::ggtitle("") + aline
              } else {
-               ggplot2::autoplot(values) + ylabtitle
+               ggplot2::autoplot(values) + ylabtitle  + aline
              }
            }
            )
          gridExtra::marrangeGrob(plots, nrow = row_no, ncol = col_no)
+    },
+    assessUseBest = function(bestInUse, actual){
+      data.table::rbindlist(lapply(c(1:length(bestInUse)), function(list_index){
+        cwe_name <- bestInUse[[list_index]]$cwe
+        ylabtitle <- ggplot2::ylab(cwe_name)
+        values <- bestInUse[[list_index]]$future
+        measure <- round(forecast::accuracy(
+          values, actual[, cwe_name])["Test set", ], 4)
+        list(cwe = cwe_name, method = bestInUse[[list_index]]$future$method,
+             MAE = measure["MAE"], RMSE = measure["RMSE"],
+             MAPE = measure["MAPE"], MASE = measure["MASE"])
+      }
+      ))
     },
     setBenchmark = function(destroy = F){
       if (destroy) {
@@ -338,13 +363,19 @@ CVSSForecaster <- R6::R6Class(
           } else if (compare$isName("linear") & compare$isName("regression")) {
             result <- self$getTSLinear(cwe_name)
           } else if (compare$isName("ets")) {
-            result < self$getETS(cwe_name)
+            result <- self$getETS(cwe_name)
           } else if (compare$isName("arima")) {
             result <- self$getARIMA(cwe_name)
           } else if (compare$isName("arfima")) {
             result <- self$getARFIMA(cwe_name)
           } else if (compare$isName("baggedModel")) {
             result <- self$getBaggedETS(cwe_name)
+          } else if (compare$isName("nnar")) {
+            result <- self$getNNAR(cwe_name)
+          } else if (compare$isName("basic") & compare$isName("structural")) {
+            result <- self$getStructTS(cwe_name)
+          } else if (compare$isName("bats") | compare$isName("tbats")) {
+            result <- self$getTBATS(cwe_name)
           }
           rm(compare)
           result

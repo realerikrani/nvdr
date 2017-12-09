@@ -4,32 +4,32 @@ ARIMAModel <- R6::R6Class(
 
   public = list(
     buildModel = function(...){
-      arguments <- list(...)
-      stepw <- arguments$stepwise
-      approx <- arguments$approximation
-      train <- super$getTrainingSet()
-      fit_bc <-
-        forecast::auto.arima(train, lambda = super$findLambda(train),
-                             stepwise = stepw, approximation = approx)
-      fit <- forecast::auto.arima(train, stepwise = stepw,
-                                  approximation = approx)
-      super$setFittedFcasted(fit, fit_bc)
-      residuals <- zoo::na.approx(super$getFitted()$residuals)
-      super$testResidualsRandomnessBox(residuals,
-                                       length(super$getFitted()$coef))
-      super$testResidualsNormality(residuals)
-      super$considerBootstrap(fit, fit_bc)
+      super$setFittedFcasted(private$fitARIMA, private$testRandomness,
+                             private$fcastARIMA, ...)
     },
-    useModel = function(fcast_period, residuals_check = T){
-      fit_bc <- function(new_train) forecast::auto.arima(
-        new_train, lambda = super$findLambda(new_train),
-        stepwise = F, approximation = F)
-      fit <- function(new_train) forecast::auto.arima(new_train,
-                                                      stepwise = F,
-                                                      approximation = F)
-      fcast <- function(ft) forecast::forecast(
-        ft, h = fcast_period, bootstrap = !super$isBootstrapNotUsed())
-      super$executeUseModel(fit, fit_bc, fcast, residuals_check)
+    useModel = function(fcast_period, ...){
+      super$executeUseModel(private$fitARIMA, private$fcastARIMA, fcast_period,
+                            ...)
+    }
+  ),
+  private = list(
+    testRandomness = function(residuals) {
+      super$setResidualsNotRandom(super$testResidualsRandomnessBox(residuals,
+                                       length(super$getFitted()$coef)))
+      },
+    fitARIMA = function(train, ...){
+      arguments <- list(...)
+      sw <- arguments$stepwise
+      appr <- arguments$approximation
+      forecast::auto.arima(train, lambda = super$findLambda(train),
+                           stepwise = ifelse(length(sw),sw,T),
+                           approximation = ifelse(length(appr),appr,T))
+    },
+    fcastARIMA = function(fitted_model, fcast_period, ...){
+      arguments <- list(...)
+      btstrp <- arguments$bootstrap
+      forecast::forecast(fitted_model, h = fcast_period,
+                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F))
     }
   )
 )

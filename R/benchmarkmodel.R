@@ -1,6 +1,6 @@
 BenchmarkModel <- R6::R6Class(
   "BenchmarkModel",
-  inherit = NVDModel,
+  inherit = FcastModel,
 
   public = list(
     getMeanModel = function(){
@@ -20,15 +20,15 @@ BenchmarkModel <- R6::R6Class(
       private$assessModels()
       private$pickBestModel()
     },
-    useModel = function(fcast_period, residuals_check = T){
+    useModel = function(fcast_period){
       if (length(self$getMeanModel()) > 1) {
-        self$getMeanModel()$useModel(fcast_period, residuals_check)
+        self$getMeanModel()$useModel(fcast_period)
       } else if (length(self$getDriftModel()) > 1) {
-        self$getDriftModel()$useModel(fcast_period, residuals_check)
+        self$getDriftModel()$useModel(fcast_period)
       } else if (length(self$getNaiveModel()) > 1) {
-        self$getNaiveModel()$useModel(fcast_period, residuals_check)
+        self$getNaiveModel()$useModel(fcast_period)
       } else {
-        self$getSNaiveModel()$useModel(fcast_period, residuals_check)
+        self$getSNaiveModel()$useModel(fcast_period)
       }
     }
   ),
@@ -40,9 +40,7 @@ BenchmarkModel <- R6::R6Class(
     snaive_model = NA,
 
     buildModels = function(){
-      cwe_ts <- ts(c(super$getTrainingSet(), super$getTestSet()),
-                   start = start(super$getTrainingSet()),
-                   frequency = frequency(super$getTrainingSet()))
+      cwe_ts <- super$getMergedTrainTestSet()
       cwe <- super$getCWE()
       start_year <- super$getStartYear()
       end_year <- super$getEndYear()

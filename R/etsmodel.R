@@ -4,23 +4,26 @@ ETSModel <- R6::R6Class(
 
   public = list(
     buildModel = function(){
-      train <- super$getTrainingSet()
-      fit_bc <- forecast::ets(train, lambda = super$findLambda(train))
-      fit <- forecast::ets(train)
-      super$setFittedFcasted(fit, fit_bc)
-      residuals <- zoo::na.approx(super$getFitted()$residuals)
-      super$testResidualsRandomnessBox(residuals, length(super$getFitted()$par))
-      super$testResidualsNormality(residuals)
-      super$considerBootstrap(fit, fit_bc)
+      super$setFittedFcasted(private$fitETS, private$testRandomness,
+                             private$fcastETS)
     },
-    useModel = function(fcast_period, residuals_check = T){
-      fit_bc <- function(new_train) forecast::ets(
-        new_train, lambda = super$findLambda(new_train))
-      fit <- function(new_train) forecast::ets(new_train)
-      fcast <- function(ft) forecast::forecast(ft,
-                                  h = fcast_period,
-                                  bootstrap = !super$isBootstrapNotUsed())
-      super$executeUseModel(fit, fit_bc, fcast, residuals_check)
+    useModel = function(fcast_period){
+      super$executeUseModel(private$fitETS, private$fcastETS, fcast_period)
     }
-    )
+  ),
+  private = list(
+    testRandomness = function(residuals) {
+      super$setResidualsNotRandom(super$testResidualsRandomnessBox(residuals,
+                                       length(super$getFitted()$par)))
+      },
+    fitETS = function(train){
+      forecast::ets(train, lambda = super$findLambda(train))
+    },
+    fcastETS = function(fitted_model, fcast_period, ...){
+      arguments <- list(...)
+      btstrp <- arguments$bootstrap
+      forecast::forecast(fitted_model, h = fcast_period,
+                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F))
+    }
+  )
   )

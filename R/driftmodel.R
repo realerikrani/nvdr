@@ -11,20 +11,17 @@ DriftModel <- R6::R6Class(
                               function() private$applyForecast(box_cox = T,
                                                                bstrap = T))
     },
-    useModel = function(fcast_period, residuals_check){
-      train <- super$getTrainingSet()
-      new_train <- ts(c(train, super$getTestSet()), start = start(train),
-                      frequency = frequency(train))
-      fcast_bc <- function() private$applyForecast(
+    useModel = function(fcast_period){
+      fcast_bc <- function(train) private$applyForecast(
         box_cox = T,
         bstrap = !super$isBootstrapNotUsed(),
-        use_train = new_train,
+        use_train = train,
         use_period = fcast_period)
-      fcast <- function() private$applyForecast(
+      fcast <- function(train) private$applyForecast(
         bstrap = !super$isBootstrapNotUsed(),
-        use_train = new_train,
+        use_train = train,
         use_period = fcast_period)
-      super$executeUseModel(fcast, fcast_bc, residuals_check)
+      super$executeUseModel(fcast, fcast_bc)
     }
   ),
   private = list(

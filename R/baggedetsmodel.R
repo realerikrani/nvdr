@@ -3,22 +3,23 @@ BaggedETSModel <- R6::R6Class(
   inherit = FitModel,
 
   public = list(
-    setFittedFcasted = function(){
-      super$setFitted(forecast::baggedModel(super$getTrainingSet(),
-                                            fn = "ets"))
-      super$setFcasted(forecast::forecast(super$getFitted(),
-                                          h = super$getFcastPeriod()))
-    },
     buildModel = function(){
-      self$setFittedFcasted()
-      residuals <- zoo::na.approx(super$getFitted()$residuals)
-      super$testResidualsNormality(residuals)
-      super$setPiIgnored(T)
+      super$setFittedFcasted(private$fitBaggedETS, private$testRandomness,
+                             private$fcastBaggedETS)
     },
-    useModel = function(fcast_period, residuals_check = T){
-      fit <- function(new_train) forecast::baggedModel(new_train, fn = "ets")
-      fcast <- function(ft) forecast::forecast(ft, h = fcast_period)
-      super$executeUseModel(fit, NULL, fcast, residuals_check)
+    useModel = function(fcast_period){
+      super$executeUseModel(private$fitBaggedETS, private$fcastBaggedETS,
+                            fcast_period)
     }
-    )
+    ),
+  private = list(
+    testRandomness = function(residuals) NULL,
+    fitBaggedETS = function(train){
+      super$setPiIgnored(T)
+      forecast::baggedETS(train)
+    },
+    fcastBaggedETS = function(fitted_model, fcast_period, ...){
+      forecast::forecast(fitted_model, h = fcast_period)
+    }
+  )
   )

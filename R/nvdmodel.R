@@ -41,6 +41,17 @@ NVDModel <- R6::R6Class(
     getTSetChar = function(){
       private$tset_char
     },
+    getResiduals = function(model){
+      zoo::na.approx(stats::residuals(model))
+    },
+    getMergedTrainTestSet = function(){
+      train <- self$getTrainingSet()
+      ts(c(train, self$getTestSet()), start = start(train),
+         frequency = frequency(train))
+    },
+    getSignificanceLevel = function(){
+      private$significance_level
+    },
     areResidualsNotRandom = function(){
       private$residuals_not_random
     },
@@ -50,11 +61,11 @@ NVDModel <- R6::R6Class(
     isPiIgnored = function(){
       private$pi_ignored
     },
-    isBoxCoxApplied = function(){
-      private$box_cox_applied
-    },
     isBootstrapNotUsed = function(){
       private$bootstrap_not_used
+    },
+    setSignificanceLevel = function(significance){
+      private$significance_level <- significance
     },
     setResidualsNotRandom = function(testresult){
       private$residuals_not_random <- testresult
@@ -67,9 +78,6 @@ NVDModel <- R6::R6Class(
     },
     setPiIgnored = function(logical_value){
       private$pi_ignored <- logical_value
-    },
-    setBoxCoxApplied = function(logical_value){
-      private$box_cox_applied <- logical_value
     },
     setFcasted = function(fcast_result){
       private$fcast <- fcast_result
@@ -87,16 +95,16 @@ NVDModel <- R6::R6Class(
       p_value <- stats::Box.test(
         residuals, fitdf = df, lag = private$residuals_lag(df, residuals),
         type = "Ljung-Box")$p.value
-      private$residuals_not_random <- (p_value <= 0.05)
+      p_value <= self$getSignificanceLevel()
     },
     testResidualsRandomnessBreusch = function(residuals, df, fitted_model){
       lag <- private$residuals_lag(df, residuals)
       p_value <- lmtest::bgtest(fitted_model, order = lag)$p.value
-      private$residuals_not_random <- (p_value <= 0.05)
+      p_value <= self$getSignificanceLevel()
     },
     testResidualsNormality = function(residuals){
       p_value <- stats::shapiro.test(residuals)$p.value
-      private$residuals_not_normal <- (p_value <= 0.05)
+      p_value <= self$getSignificanceLevel()
     },
    getPlot = function(){
        cwe_name <- self$getCWE()
@@ -108,10 +116,12 @@ NVDModel <- R6::R6Class(
            (self$areResidualsNotNormal() & self$isBootstrapNotUsed()) |
            self$isPiIgnored()) {
          ylab <- ggplot2::ylab(paste("!", cwe_name, "CVSS"))
-         ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide
+         ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide +
+           ggplot2::scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 10))
        } else {
          ylab <- ggplot2::ylab(paste(cwe_name, "CVSS"))
-         ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide
+         ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide +
+           ggplot2::scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 10))
        }
      },
    compareCombinedAccuracy = function(fcast1, fcast2){
@@ -143,7 +153,7 @@ NVDModel <- R6::R6Class(
     pi_ignored = F,
     measures = c("MAE", "RMSE", "MAPE", "MASE"),
     tset_char = "Test set",
-    box_cox_applied = F,
+    significance_level = 0.05,
 
     #' Lag finder
     #'
