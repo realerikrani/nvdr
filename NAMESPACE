@@ -2,6 +2,8 @@
 
 export(CVSSForecaster)
 export(CWE)
+export(NameComparer)
+export(findBestColumn)
 export(get_nvd_entries)
 export(get_nvd_from_file)
 export(get_nvd_from_files)

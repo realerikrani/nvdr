@@ -22,8 +22,8 @@ ARIMAModel <- R6::R6Class(
       sw <- arguments$stepwise
       appr <- arguments$approximation
       forecast::auto.arima(train, lambda = super$findLambda(train),
-                           stepwise = ifelse(length(sw),sw,T),
-                           approximation = ifelse(length(appr),appr,T))
+                           stepwise = ifelse(length(sw), sw, T),
+                           approximation = ifelse(length(appr), appr, T))
     },
     fcastARIMA = function(fitted_model, fcast_period, ...){
       arguments <- list(...)

@@ -1,3 +1,9 @@
+#' Find best column
+#'
+#' @param metrics forecast accuracy metrics
+#'
+#' @return the name of the selected column
+#' @export
 findBestColumn <- function(metrics) {
   mins <- apply(metrics, 1, function(m){
     ifelse(all(is.infinite(m)), "", colnames(metrics)[which.min(m)])
@@ -6,6 +12,14 @@ findBestColumn <- function(metrics) {
   best
 }
 
+#' NameComparer
+#'
+#' @importFrom R6 R6Class
+#' @name NameComparer
+#'
+NULL
+
+#' @export
 NameComparer <- R6::R6Class(
   "NameComparer",
   public = list(

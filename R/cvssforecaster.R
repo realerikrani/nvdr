@@ -237,9 +237,9 @@ CVSSForecaster <- R6::R6Class(
     },
     plotUseBest = function(bestInUse, row_no, col_no, compact = F, actual){
         if (missing(actual)) {
-          actual_line = function(actual, cwe) NULL
+          actual_line <- function(actual, cwe) NULL
         } else {
-          actual_line = function(actual, cwe) forecast::autolayer(
+          actual_line <- function(actual, cwe) forecast::autolayer(
             actual[, cwe], series = "Actual")
         }
          plots <- lapply(c(1:length(bestInUse)), function(list_index){
