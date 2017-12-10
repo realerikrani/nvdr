@@ -18,7 +18,7 @@ TBATSModel <- R6::R6Class(
           NROW(super$getFitted()$seed.states)))
     },
     fitTBATS = function(train){
-      suppressWarnings(forecast::tbats(train))
+      suppressWarnings(forecast::tbats(train, biasadj = T))
     },
     fcastTBATS = function(fitted_model, fcast_period, ...){
       forecast::forecast(fitted_model, h = fcast_period)
