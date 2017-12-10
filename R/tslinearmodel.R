@@ -19,7 +19,8 @@ TSLinearModel <- R6::R6Class(
               length(super$getFitted()$model$coefficients), super$getFitted()))
       },
     fitTSLinear = function(train){
-      forecast::tslm(train ~ trend + season, lambda = super$findLambda(train))
+      forecast::tslm(train ~ trend + season, lambda = super$findLambda(train),
+                     biasadj = T)
     },
     fcastTSLinear = function(fitted_model, fcast_period, ...){
       arguments <- list(...)

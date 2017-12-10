@@ -36,7 +36,7 @@ DriftModel <- R6::R6Class(
       if (box_cox) {
         forecast::rwf(train, h = fcast_period,
                         lambda = super$findLambda(train),
-                        bootstrap = bstrap, drift = T)
+                        bootstrap = bstrap, drift = T, biasadj = T)
       } else {
         forecast::rwf(train, h = fcast_period, bootstrap = bstrap, drift = T)
       }

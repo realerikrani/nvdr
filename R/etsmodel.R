@@ -17,7 +17,7 @@ ETSModel <- R6::R6Class(
                                        length(super$getFitted()$par)))
       },
     fitETS = function(train){
-      forecast::ets(train, lambda = super$findLambda(train))
+      forecast::ets(train, lambda = super$findLambda(train), biasadj = T)
     },
     fcastETS = function(fitted_model, fcast_period, ...){
       arguments <- list(...)

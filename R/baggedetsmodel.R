@@ -16,7 +16,7 @@ BaggedETSModel <- R6::R6Class(
     testRandomness = function(residuals) NULL,
     fitBaggedETS = function(train){
       super$setPiIgnored(T)
-      forecast::baggedETS(train)
+      forecast::baggedModel(train, fn = "ets")
     },
     fcastBaggedETS = function(fitted_model, fcast_period, ...){
       forecast::forecast(fitted_model, h = fcast_period)

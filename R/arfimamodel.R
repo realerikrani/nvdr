@@ -16,7 +16,7 @@ ARFIMAModel <- R6::R6Class(
     testRandomness = function(residuals) NULL,
     fitARFIMA = function(train){
       super$setPiIgnored(T)
-      forecast::arfima(train, lambda = super$findLambda(train))
+      forecast::arfima(train, lambda = super$findLambda(train), biasadj = T)
     },
     fcastARFIMA = function(fitted_model, fcast_period, ...){
       forecast::forecast(fitted_model, h = fcast_period)

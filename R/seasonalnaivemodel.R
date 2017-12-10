@@ -36,7 +36,7 @@ SeasonalNaiveModel <- R6::R6Class(
       if (box_cox) {
         forecast::snaive(train, h = fcast_period,
                          lambda = super$findLambda(train),
-                         bootstrap = bstrap)
+                         bootstrap = bstrap, biasadj = T)
       } else {
         forecast::snaive(train, h = fcast_period, bootstrap = bstrap)
       }
