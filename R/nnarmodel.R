@@ -15,20 +15,22 @@ NNARModel <- R6::R6Class(
   private = list(
     testRandomness = function(residuals) NULL,
     fitNNAR = function(train, ...){
+      arguments <- list(...)
+      pi <- arguments$pi_simulation
+      if (length(pi) > 0) {
+        super$setPiIgnored(pi)
+      } else {
+        super$setPiIgnored(T)
+      }
       forecast::nnetar(train, lambda = super$findLambda(train))
     },
     fcastNNAR = function(fitted_model, fcast_period, ...){
       arguments <- list(...)
       btstrp <- arguments$bootstrap
       pi <- arguments$pi_simulation
-      if (length(pi) > 1) {
-        super$setPiIgnored(F)
-      } else {
-        super$setPiIgnored(T)
-      }
       forecast::forecast(fitted_model, h = fcast_period,
-                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F),
-                         PI = pi)
+                         bootstrap = ifelse(length(btstrp) > 0, btstrp, F),
+                         PI = ifelse(length(pi) > 0, pi, F))
     }
   )
 )

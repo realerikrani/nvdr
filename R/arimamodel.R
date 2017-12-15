@@ -22,15 +22,15 @@ ARIMAModel <- R6::R6Class(
       sw <- arguments$stepwise
       appr <- arguments$approximation
       forecast::auto.arima(train, lambda = super$findLambda(train),
-                           stepwise = ifelse(length(sw), sw, T),
-                           approximation = ifelse(length(appr), appr, T),
+                           stepwise = ifelse(length(sw) > 0, sw, T),
+                           approximation = ifelse(length(appr) > 0, appr, T),
                            biasadj = T)
     },
     fcastARIMA = function(fitted_model, fcast_period, ...){
       arguments <- list(...)
       btstrp <- arguments$bootstrap
       forecast::forecast(fitted_model, h = fcast_period,
-                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F))
+                         bootstrap = ifelse(length(btstrp) > 0, btstrp, F))
     }
   )
 )

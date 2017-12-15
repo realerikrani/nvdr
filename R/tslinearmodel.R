@@ -27,7 +27,7 @@ TSLinearModel <- R6::R6Class(
       btstrp <- arguments$bootstrap
       forecast::forecast(fitted_model,
                          h = fcast_period,
-                         bootstrap = ifelse(length(btstrp) > 1, btstrp, F))
+                         bootstrap = ifelse(length(btstrp) > 0, btstrp, F))
     }
   )
 )
