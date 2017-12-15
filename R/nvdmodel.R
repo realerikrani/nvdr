@@ -117,11 +117,11 @@ NVDModel <- R6::R6Class(
            self$isPiIgnored()) {
          ylab <- ggplot2::ylab(paste("!", cwe_name, "CVSS"))
          ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide +
-           ggplot2::scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 10))
+           ggplot2::scale_y_continuous(limits = private$plot_limits())
        } else {
          ylab <- ggplot2::ylab(paste(cwe_name, "CVSS"))
          ggplot2::autoplot(future, PI = T) + ylab + actual_line + no_guide +
-           ggplot2::scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 10))
+           ggplot2::scale_y_continuous(limits = private$plot_limits())
        }
      },
    compareCombinedAccuracy = function(fcast1, fcast2){
@@ -154,6 +154,17 @@ NVDModel <- R6::R6Class(
     measures = c("MAE", "RMSE", "MAPE", "MASE"),
     tset_char = "Test set",
     significance_level = 0.05,
+
+    plot_limits = function() {
+      future <- self$getFcasted()
+      if (length(future$upper) > 0) {
+        c(min(future$lower, self$getTestSet(), self$getTrainingSet()),
+          max(future$upper,  self$getTestSet(), self$getTrainingSet()))
+      } else {
+        c(min(future$mean, self$getTestSet(), self$getTrainingSet()),
+          max(future$mean, self$getTestSet(), self$getTrainingSet()))
+      }
+    },
 
     #' Lag finder
     #'
