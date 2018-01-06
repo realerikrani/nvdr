@@ -83,7 +83,7 @@ list_of_unseen_future_forecasts <- cf$useBest(9)
 cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2)
 ## Assuming that some time has gone past and a new CWE object `c2`
 ## has been created containing time series test data, one can find out the forecast accuracy and add the obtained actual values to plots
-assessUseBest(list_of_unseen_future_forecasts, c2$getTimeSeriesData())
+cf$assessUseBest(list_of_unseen_future_forecasts, c2$getTimeSeriesData())
 cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2, actual = c2$getTimeSeriesData())
 
 ## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
