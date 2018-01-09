@@ -22,7 +22,10 @@ FitModel <- R6::R6Class(
                                       bootstrap = T,
                                       fcast_period = super$getFcastPeriod(),
                                       ...)))
-        super$setBootstrapNotUsed(F)
+        compare <- nvdr::NameComparer$new(super$getMethod())
+        if (!(compare$isName("linear") & compare$isName("regression"))){
+          super$setBootstrapNotUsed(F)
+        }
       } else {
         super$setFcasted(do.call(fcast_function,
                                  list(self$getFitted(),
