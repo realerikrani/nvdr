@@ -11,19 +11,6 @@ Forecasts monthly mean CVSS scores of subsets of CWE vulnerabilities.
 \preformatted{
 ## Create new forecasting object.
 cf <- CVSSForecaster$new()
-## Find interesting CWE vulnerability categories between years 2011 and 2016.
-cf$setCWENamesAndSeries()
-## Set models (creates the forecasts models for the selected CWEs' time
-series and measures the accuracy).
-cf$setARIMA()
-cf$setETS()
-## Get forecast plots.
-cf$getPlots(cf$getARIMA())
-cf$getPlots(cf$getETS())
-## Get ARIMA model's AICc, AIC and BIC.
-cf$getInformationCriterions(cf$getARIMA())
-## Get forecast accuracy measures.
-cf$getAssessments(cf$getARIMA())
 }
 }
 
@@ -32,23 +19,3 @@ cf$getAssessments(cf$getARIMA())
 \code{$new()} creates new CVSSForecaster object
 }
 
-\examples{
-\dontrun{
-## Create new forecasting object.
-cf <- CVSSForecaster$new()
-## Find interesting CWE vulnerability categories between years 2011 and 2016.
-cf$setCWENamesAndSeries()
-## Set models (creates the forecasts models for the selected CWEs' time
-series and measures the accuracy).
-cf$setARIMA()
-cf$setETS()
-## Get forecast plots.
-cf$getPlots(cf$getARIMA())
-cf$getPlots(cf$getETS())
-## Get ARIMA model's AICc, AIC and BIC.
-cf$getInformationCriterions(cf$getARIMA())
-## Get forecast accuracy measures.
-cf$getAssessments(cf$getARIMA())
-}
-
-}

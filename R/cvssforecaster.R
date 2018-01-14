@@ -6,19 +6,6 @@
 #' \preformatted{
 #' ## Create new forecasting object.
 #' cf <- CVSSForecaster$new()
-#' ## Find interesting CWE vulnerability categories between years 2011 and 2016.
-#' cf$setCWENamesAndSeries()
-#' ## Set models (creates the forecasts models for the selected CWEs' time
-#' series and measures the accuracy).
-#' cf$setARIMA()
-#' cf$setETS()
-#' ## Get forecast plots.
-#' cf$getPlots(cf$getARIMA())
-#' cf$getPlots(cf$getETS())
-#' ## Get ARIMA model's AICc, AIC and BIC.
-#' cf$getInformationCriterions(cf$getARIMA())
-#' ## Get forecast accuracy measures.
-#' cf$getAssessments(cf$getARIMA())
 #' }
 #'
 #' @section Details:
@@ -26,24 +13,6 @@
 #'
 #' @importFrom R6 R6Class
 #' @name CVSSForecaster
-#' @examples
-#' \dontrun{
-#' ## Create new forecasting object.
-#' cf <- CVSSForecaster$new()
-#' ## Find interesting CWE vulnerability categories between years 2011 and 2016.
-#' cf$setCWENamesAndSeries()
-#' ## Set models (creates the forecasts models for the selected CWEs' time
-#' series and measures the accuracy).
-#' cf$setARIMA()
-#' cf$setETS()
-#' ## Get forecast plots.
-#' cf$getPlots(cf$getARIMA())
-#' cf$getPlots(cf$getETS())
-#' ## Get ARIMA model's AICc, AIC and BIC.
-#' cf$getInformationCriterions(cf$getARIMA())
-#' ## Get forecast accuracy measures.
-#' cf$getAssessments(cf$getARIMA())
-#' }
 #'
 NULL
 
@@ -141,42 +110,6 @@ CVSSForecaster <- R6::R6Class(
                ))
              }
              ))
-    },
-    compareAssessments = function(model_list1, model_list2){
-      merged <- merge(self$getAssessments(model_list1),
-                      self$getAssessments(model_list2), by = "cwe")
-      print(paste(class(model_list1[[1]])[[1]], "<=",
-                  class(model_list2[[1]])[[1]]))
-      data.table::rbindlist(apply(merged, 1, function(assessrow){
-        cwe_name <- assessrow[1]
-        method1 <- assessrow[2]
-        method2 <- assessrow[7]
-        mae1 <- as.numeric(assessrow[3])
-        mae2 <- as.numeric(assessrow[8])
-        mae_best <- ifelse(mae1 < mae2, method1, method2)
-        rmse1 <- as.numeric(assessrow[4])
-        rmse2 <- as.numeric(assessrow[9])
-        rmse_best <- ifelse(rmse1 < rmse2, method1, method2)
-        mape1 <- as.numeric(assessrow[5])
-        mape2 <- as.numeric(assessrow[10])
-        mape_best <- ifelse(mape1 < mape2, method1, method2)
-        mase1 <- as.numeric(assessrow[6])
-        mase2 <- as.numeric(assessrow[11])
-        mase_best <- ifelse(mase1 < mase2, method1, method2)
-        best_vector <- c(mae_best, rmse_best, mape_best, mase_best)
-        best <- names(sort(summary(as.factor(best_vector)),
-                           decreasing = T)[1])
-        list(cwe = cwe_name,
-             method = ifelse(best == method1, best, "X"),
-             MAE = ifelse(mae1 < mae2, mae1, "X"),
-             RMSE = ifelse(rmse1 < rmse2, rmse1, "X"),
-             MAPE = ifelse(mape1 < mape2, mape1, "X"),
-             MASE = ifelse(mase1 < mase2, mase1, "X"))
-      }
-      ))
-    },
-    getInformationCriterions = function(model_list){
-      private$ic(model_list)
     },
     getBestModelList = function(){
       private$best_model_list
@@ -428,18 +361,6 @@ CVSSForecaster <- R6::R6Class(
           as.list(
             c(cwe = m$getCWE(), method = m$getMethod(),
               round(m$getAssessment(), 4))
-          )
-        })
-      )
-    },
-    ic = function(model_list){
-      data.table::rbindlist(
-        lapply(c(1:length(model_list)), function(list_index){
-          m <- model_list[[list_index]]
-          as.list(
-            c(cwe = m$getCWE(), aicc = round(m$getFitted()$aicc, 4),
-              aic = round(m$getFitted()$aic, 4),
-              bic = round(m$getFitted()$bic, 4))
           )
         })
       )

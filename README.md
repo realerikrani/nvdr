@@ -47,28 +47,24 @@ c$setTimeSeriesData(c$getMonthlyData(c("CWE-119","CWE-78")))
 cf <- CVSSForecaster$new()
 ## Use the created CWE object with its time period and time series data.
 cf$setCWEs(c)
-## Create models and forecasts (creates the forecasts models for the selected CWEs' time series and measures the accuracy).
+## Create models and forecasts (creates the forecast models for the selected CWEs' time series and measures the accuracy).
 cf$setBenchmark()
 cf$setETS()
 cf$setARIMA()
-## Get forecast plots.
+## Get forecast plots for specific type of models.
 cf$getPlots(cf$getARIMA())
 cf$getPlots(cf$getETS())
 ## Get all created ARIMA models
 cf$getARIMA()
 ## Get ARIMA model by CWE that is among the selected CWEs.
 cf$getARIMA("CWE-119")
-## Merge a potentially good ARIMA model's training and test data into new training data for forecasts of the unknown future of 9 months.
+## Merge a potentially good ARIMA model's training and test data into new training data to  forecast the unknown future of 9 months.
 cf$getARIMA("CWE-119")$useModel(9)
 ## Save the unknown future results and plot them with ggplot2
 u <- cf$getARIMA("CWE-119")$useModel(9)
 ggplot2::autoplot(u)
-## Get ARIMA model's AICc, AIC and BIC.
-cf$getInformationCriterions(cf$getARIMA())
 ## Get ARIMA forecast accuracy measures.
 cf$getAssessments(cf$getARIMA())
-## Compare Benchmark and ETS
-cf$compareAssessments(cf$getBenchmark(),cf$getETS())
 ## Get assessments of the most accurate models that have been created so far for each CWE
 cf$getBestAssessments()
 ## Get all forecast accuracy measures so far
@@ -98,7 +94,7 @@ cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2, actual =
    setStructTS()
    getCWENames()
    getSeries()
-   getBest()
+   getBestAssessments()
    getAllAssessments()
    
 ## Available for class CWE. See the source code to understand specific use cases.

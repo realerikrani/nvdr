@@ -15,15 +15,15 @@ FitModel <- R6::R6Class(
       residuals <- super$getResiduals(self$getFitted())
       do.call(test_randomness, list(residuals))
       super$setResidualsNotNormal(super$testResidualsNormality(residuals))
-      if (super$areResidualsNotNormal() & !super$areResidualsNotRandom() &
-          !super$isPiIgnored()) {
+      if (!super$isPiIgnored() & super$areResidualsNotNormal() &
+          !super$areResidualsNotRandom()) {
         super$setFcasted(do.call(fcast_function,
                                  list(self$getFitted(),
                                       bootstrap = T,
                                       fcast_period = super$getFcastPeriod(),
                                       ...)))
         compare <- nvdr::NameComparer$new(super$getMethod())
-        if (!(compare$isName("linear") & compare$isName("regression"))){
+        if (compare$isName("arima") | compare$isName("ets")) {
           super$setBootstrapNotUsed(F)
         }
       } else {
