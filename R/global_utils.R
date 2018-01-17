@@ -1,5 +1,5 @@
 #' Find best column
-#'
+#' @keywords internal
 #' @param metrics forecast accuracy metrics
 #'
 #' @return the name of the selected column
@@ -13,7 +13,8 @@ findBestColumn <- function(metrics) {
 }
 
 #' NameComparer
-#'
+
+#' @keywords internal
 #' @importFrom R6 R6Class
 #' @name NameComparer
 #'

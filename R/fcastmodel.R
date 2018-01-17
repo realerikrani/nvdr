@@ -1,3 +1,15 @@
+#' ...
+#'
+#' ...
+#' @keywords internal
+#'
+#' @importFrom R6 R6Class
+#' @name FcastModel
+#' @export
+#'
+NULL
+
+#' @export
 FcastModel <- R6::R6Class(
   "FcastModel",
   inherit = NVDModel,

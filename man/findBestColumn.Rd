@@ -15,3 +15,4 @@ the name of the selected column
 \description{
 Find best column
 }
+\keyword{internal}

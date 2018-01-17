@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 ```
 # nvdr
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
+[![Travis-CI Build Status](https://travis-ci.org/realerikrani/nvdr.svg?branch=master)](https://travis-ci.org/realerikrani/nvdr)
 
 ## Installation
 

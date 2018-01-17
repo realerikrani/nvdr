@@ -2,6 +2,9 @@
 
 export(CVSSForecaster)
 export(CWE)
+export(FcastModel)
+export(FitModel)
+export(NVDModel)
 export(NameComparer)
 export(findBestColumn)
 export(get_nvd_entries)

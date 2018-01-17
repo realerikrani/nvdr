@@ -8,15 +8,35 @@
 #' cf <- CWE$new()
 #' }
 #'
-#' @section Details:
-#' \code{$new()} creates new CWE object
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{$new()} creates new CWE object
+#'   \item \strong{$getStartYear()} item
+#'   \item \strong{$getEndYear(plus_one = F)}
+#'   \item \strong{$getStartMonth()} ...
+#'   \item \strong{$getEndMonth()} ...
+#'   \item \strong{$getBaseData()} ...
+#'   \item \strong{$getTimeSeriesData()} ...
+#'   \item \strong{$setStartYear()} ...
+#'   \item \strong{$setEndYear()} ...
+#'   \item \strong{$setStartMonth()} ...
+#'   \item \strong{$setEndMonth()} ...
+#'   \item \strong{$setBaseData()} ...
+#'   \item \strong{$setTimeSeriesData()} ...
+#'   \item \strong{$getAnalysisData()} ...
+#'   \item \strong{$getMostInstances()} ...
+#'   \item \strong{$getMostCritical()} ...
+#'   \item \strong{$getChanging()} ...
+#'   \item \strong{$getInterestingMonthlyData()} ...
+#'   \item \strong{$getMonthlyData()} ...
+#' }
+#' }
 #'
 #' @importFrom R6 R6Class
 #' @name CWE
+#' @export
 #'
 NULL
-
-#' @export
 CWE <- R6::R6Class(
   "CWE",
   public = list(
@@ -125,24 +145,24 @@ CWE <- R6::R6Class(
           -avg_change)
         }
       },
-      getInterestingMonthlyData = function(threshold = 100, min_score = 4.0,
-                                   period_threshold = 200, as_monthly_ts = T){
-        vulns_most_instances <- self$getMostInstances(threshold = threshold)
-        vulns_most_impact <- self$getMostCritical(min_score = min_score)
-        vulns_most_change <-
-          self$getChanging(period_threshold = period_threshold)
-        interesing_cwes <- unique(c(vulns_most_instances$cwe,
-                                    vulns_most_impact$cwe,
-                                    vulns_most_change$cwe))
-        if (as_monthly_ts) {
-          vulns_by_month <- private$getTimeGroupedData(monthly = T)
-          vulns_by_month <- private$fillMissingMonthsWithZero(vulns_by_month,
-                                                              interesing_cwes)
-          private$intoTimeSeries(interesing_cwes, vulns_by_month)
-        } else {
-          interesing_cwes
-        }
-      },
+    getInterestingMonthlyData = function(threshold = 100, min_score = 4.0,
+                                 period_threshold = 200, as_monthly_ts = T){
+      vulns_most_instances <- self$getMostInstances(threshold = threshold)
+      vulns_most_impact <- self$getMostCritical(min_score = min_score)
+      vulns_most_change <-
+        self$getChanging(period_threshold = period_threshold)
+      interesing_cwes <- unique(c(vulns_most_instances$cwe,
+                                  vulns_most_impact$cwe,
+                                  vulns_most_change$cwe))
+      if (as_monthly_ts) {
+        vulns_by_month <- private$getTimeGroupedData(monthly = T)
+        vulns_by_month <- private$fillMissingMonthsWithZero(vulns_by_month,
+                                                            interesing_cwes)
+        private$intoTimeSeries(interesing_cwes, vulns_by_month)
+      } else {
+        interesing_cwes
+      }
+    },
     getMonthlyData = function(desired_cwes){
         vulns_by_month <- private$getTimeGroupedData(monthly = T)
         if (missing(desired_cwes)) {

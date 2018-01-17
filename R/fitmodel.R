@@ -1,3 +1,13 @@
+#' ...
+#'
+#' ...
+#' @keywords internal
+#'
+#' @importFrom R6 R6Class
+#' @name FitModel
+#' @export
+#'
+NULL
 FitModel <- R6::R6Class(
   "FitModel",
   inherit = NVDModel,

@@ -6,3 +6,4 @@
 \description{
 NameComparer
 }
+\keyword{internal}
