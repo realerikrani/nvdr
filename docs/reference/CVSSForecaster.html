@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CVSS Forecaster — CVSSForecaster â€¢ nvdr</title>
+<title>Class CVSSForecaster — CVSSForecaster â€¢ nvdr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -75,7 +90,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>CVSS Forecaster</h1>
+    <h1>Class CVSSForecaster</h1>
     </div>
 
     
@@ -83,48 +98,61 @@
     
 
         
-    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
+    <h2 class="hasAnchor" id="private-attributes"><a class="anchor" href="#private-attributes"></a>Private attributes</h2>
 
-    
-    <pre>
-## Create new forecasting object.
-cf &lt;- CVSSForecaster$new()
-</pre>
+    <p>All private attribute's have <code>NA</code> as default value.
+<ul>
+<li><p><strong>cwes</strong> the <code>character</code> vector of available CWEs</p></li>
+<li><p><strong>cwes_ts</strong> monthly time series of mean monthly CVSS scores of the CWEs in private attribute <code>cwes</code></p></li>
+<li><p><strong>start_year</strong> the first year of a time period</p></li>
+<li><p><strong>end_year</strong> the last year of a time period</p></li>
+<li><p><strong>end_month</strong> the last month of a time period</p></li>
+<li><p><strong>benchmark</strong> the attribute for holding a list of <a href='BenchmarkModel.html'>BenchmarkModel</a> objects</p></li>
+<li><p><strong>arima</strong> the attribute for holding a list of <a href='ARIMAModel.html'>ARIMAModel</a> objects</p></li>
+<li><p><strong>ets</strong> the attribute for holding a list of <a href='ETSModel.html'>ETSModel</a> objects</p></li>
+<li><p><strong>tslinear</strong> the attribute for holding a list of <a href='TSLinearModel.html'>TSLinearModel</a> objects</p></li>
+<li><p><strong>nnar</strong> the attribute for holding a list of <a href='NNARModel.html'>NNARModel</a> objects</p></li>
+<li><p><strong>arfima</strong> the attribute for holding a list of <a href='ARFIMAModel.html'>ARFIMAModel</a> objects</p></li>
+<li><p><strong>bagged_ets</strong> the attribute for holding a list of <a href='BaggedETSModel.html'>BaggedETSModel</a> objects</p></li>
+<li><p><strong>tbats</strong> the attribute for holding a list of <a href='TBATSModel.html'>TBATSModel</a> objects</p></li>
+<li><p><strong>struct_ts</strong> the attribute for holding a list of <a href='StructTSModel.html'>StructTSModel</a> objects</p></li>
+<li><p><strong>best_model_list</strong> the attribute for holding a list of forecasting model objects which gave the best overall forecast accuracy results for specific CWEs</p></li>
+</ul></p>
     
     <h2 class="hasAnchor" id="public-methods"><a class="anchor" href="#public-methods"></a>Public methods</h2>
 
     <p><ul>
-<li><p><strong>$new()</strong> creates new CVSSForecaster object</p></li>
-<li><p><strong>$getCWENames()</strong> ...</p></li>
-<li><p><strong>$getSeries(</strong> ...</p></li>
-<li><p><strong>$getBenchmark()</strong> ...</p></li>
-<li><p><strong>$getARIMA()</strong> ...</p></li>
-<li><p><strong>$getETS()</strong> ...</p></li>
-<li><p><strong>$getTSLinear()</strong> ...</p></li>
-<li><p><strong>$getNNAR()</strong> ...</p></li>
-<li><p><strong>$getARFIMA()</strong> ...</p></li>
-<li><p><strong>$getBaggedETS()</strong> ...</p></li>
-<li><p><strong>$getTBATS()</strong> ...</p></li>
-<li><p><strong>$getStructTS()</strong> ...</p></li>
-<li><p><strong>$getPlots()</strong> ...</p></li>
-<li><p><strong>$getAssessments()</strong> ...</p></li>
-<li><p><strong>$getAllAssessments()</strong> ...</p></li>
-<li><p><strong>$getBestModelList()</strong> ...</p></li>
-<li><p><strong>$getBestAssessments()</strong> ...</p></li>
-<li><p><strong>$useBest()</strong> ...</p></li>
-<li><p><strong>$plotUseBest()</strong> ...</p></li>
-<li><p><strong>$assessUseBest()</strong> ...</p></li>
-<li><p><strong>$setBenchmark()</strong> ...</p></li>
-<li><p><strong>$setARIMA()</strong> ...</p></li>
-<li><p><strong>$setETS()</strong> ...</p></li>
-<li><p><strong>$setTSLinear()</strong> ...</p></li>
-<li><p><strong>$setNNAR()</strong> ...</p></li>
-<li><p><strong>$setARFIMA()</strong> ...</p></li>
-<li><p><strong>$setBaggedETS()</strong> ...</p></li>
-<li><p><strong>$setTBATS()</strong> ...</p></li>
-<li><p><strong>$setStructTS()</strong> ...</p></li>
-<li><p><strong>$setCWEs()</strong> ...</p></li>
-<li><p><strong>$setBestModelList()</strong> ...</p></li>
+<li><p><strong>new()</strong> creates new CVSSForecaster object</p></li>
+<li><p><strong>getCWENames()</strong> returns private attribute <code>cwes</code></p></li>
+<li><p><strong>getSeries()</strong> returns private attribute <code>cwes_ts</code></p></li>
+<li><p><strong>getBenchmark(cwe_name)</strong> returns private attribute <code>benchmark</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='BenchmarkModel.html'>BenchmarkModel</a> object (from <code>benchmark</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getARIMA(cwe_name)</strong> returns private attribute <code>arima</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='ARIMAModel.html'>ARIMAModel</a> object (from <code>arima</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getETS(cwe_name)</strong> returns private attribute <code>ets</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='ETSModel.html'>ETSModel</a> object (from <code>ets</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getTSLinear(cwe_name)</strong> returns private attribute <code>tslinear</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='TSLinearModel.html'>TSLinearModel</a> object (from <code>tslinear</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getNNAR(cwe_name)</strong> returns private attribute <code>nnar</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='NNARModel.html'>NNARModel</a> object (from <code>nnar</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getARFIMA(cwe_name)</strong> returns private attribute <code>arfima</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='ARFIMAModel.html'>ARFIMAModel</a> object  (from <code>arfima</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getBaggedETS(cwe_name)</strong> returns private attribute <code>bagged_ets</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='BaggedETSModel.html'>BaggedETSModel</a> object (from <code>bagged_ets</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getTBATS(cwe_name)</strong> returns private attribute <code>tbats</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='TBATSModel.html'>TBATSModel</a> object (from <code>tbats</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getStructTS(cwe_name)</strong> returns private attribute <code>struct_ts</code> when the argument <code>cwe_name</code> is missing; otherwise returns a <a href='StructTSModel.html'>StructTSModel</a> object (from <code>struct_ts</code>) corresponding to <code>cwe_name</code> value (CWE ID)</p></li>
+<li><p><strong>getPlots(model_list, row_no = 5, col_no = 2)</strong> returns plots of objects in the <code>model_list</code> with <code>row_no</code> number of rows and <code>col_no</code> number of columns arranged by <a href='http://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob'>marrangeGrob</a></p></li>
+<li><p><strong>getAssessments(model_list)</strong> returns a <a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a> with columns <code>cwe</code>, <code>method</code>, <code>MAE</code>, <code>RMSE</code>, <code>MAPE</code> and <code>MASE</code> extracted from the list of models from <code>model_list</code></p></li>
+<li><p><strong>getAllAssessments()</strong> returns a <a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a> with columns <code>cwe</code>, <code>method</code>, <code>MAE</code>, <code>RMSE</code>, <code>MAPE</code> and <code>MASE</code> extracted from the models that the <code>CVSSForecaster</code> has built and stored in its private attributes.</p></li>
+<li><p><strong>getBestModelList()</strong> returns private attribute <code>best_model_list</code></p></li>
+<li><p><strong>getBestAssessments()</strong> returns a <a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a> with columns <code>cwe</code>, <code>method</code>, <code>MAE</code>, <code>RMSE</code>, <code>MAPE</code> and <code>MASE</code> extracted from a subset of models returned by <code>getAllAssessments()</code>; subset represents the models which have the biggest number of lowest MAE, RMSE, MAPE and MASE values for a given CWE</p></li>
+<li><p><strong>useBest(fcast_period, arima_stepwise = F, arima_approx = F, nnar_pi_sim = T)</strong> returns a list of lists, where each list has two elements: CWE ID and the forecasts <code>fcast_period</code>-step ahead into the future as a "<code>forecast</code>" object generated by the same type of model that generated previously the most accurate forecasts according to CVSSForecaster's method <code>getBestAssessments</code></p></li>
+<li><p><strong>plotUseBest(bestInUse, row_no, col_no, compact = F, actual)</strong> returns plots of objects in the <code>bestInUse</code> object previously generated by CVSSForecaster's method <code>useBest</code> with <code>row_no</code> number of rows and <code>col_no</code> number of columns; argument <code>compact = T</code> removes details from plots; when argument <code>actual</code> is not missing, then the actual values are added as a red line to the plot (should be the time series output of <a href='CWE.html'>CWE</a> object's method <code>getTimeSeriesData</code>)</p></li>
+<li><p><strong>assessUseBest(bestInUse, actual)</strong> returns a <a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a> with columns <code>cwe</code>, <code>method</code>, <code>MAE</code>, <code>RMSE</code>, <code>MAPE</code> and <code>MASE</code> where the forecast accuracy numbers are calculated by using the forecasting output by CVSSForecaster's method <code>useBest</code> and the time series of actual values in a form given by <a href='CWE.html'>CWE</a> object's method <code>getTimeSeriesData</code>); example: CVSSForecaster's method <code>useBest</code> generated forecasts for 2018 based on the available data from 2013 to 2017, which was eventually checked when 2018 data became available</p></li>
+<li><p><strong>setBenchmark(destroy = F)</strong> builds and assesses <a href='BenchmarkModel.html'>BenchmarkModel</a> and assigns the result to the private attribute <code>benchmark</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>benchmark</code></p></li>
+<li><p><strong>setARIMA(stepwise = T, approximation = T, destroy = F)</strong> builds and assesses <a href='ARIMAModel.html'>ARIMAModel</a> and assigns the result to the private attribute <code>arima</code>; the arguments <code>stepwise</code> and <code>approximation</code> are passed eventually to <a href='http://pkg.robjhyndman.com/forecast/reference/auto.arima.html'>forecast::auto.arima</a>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>arima</code></p></li>
+<li><p><strong>setETS(destroy = F)</strong> builds and assesses <a href='ETSModel.html'>ETSModel</a> and assigns the result to the private attribute <code>ets</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>ets</code></p></li>
+<li><p><strong>setTSLinear(destroy = F)</strong> builds and assesses <a href='TSLinearModel.html'>TSLinearModel</a> and assigns the result to the private attribute <code>tslinear</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>tslinear</code></p></li>
+<li><p><strong>setNNAR(pi_simulation = F, destroy = F)</strong> builds and assesses <a href='NNARModel.html'>NNARModel</a> and assigns the result to the private attribute <code>nnar</code>; the value of the argument <code>pi_simulation</code> is passed eventually to <a href='http://www.rdocumentation.org/packages/forecast/topics/nnetar'>nnetar</a> as the value of that method's argument <code>PI</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>nnar</code></p></li>
+<li><p><strong>setARFIMA(destroy = F)</strong> builds and assesses <a href='ARFIMAModel.html'>ARFIMAModel</a> and assigns the result to the private attribute <code>arfima</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>arfima</code></p></li>
+<li><p><strong>setBaggedETS(destroy = F)</strong> builds and assesses <a href='BaggedETSModel.html'>BaggedETSModel</a> and assigns the result to the private attribute <code>bagged_ets</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>bagged_ets</code></p></li>
+<li><p><strong>setTBATS(destroy = F)</strong> builds and assesses <a href='TBATSModel.html'>TBATSModel</a> and assigns the result to the private attribute <code>tbats</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>tbats</code></p></li>
+<li><p><strong>setStructTS(destroy = F)</strong> builds and assesses <a href='StructTSModel.html'>StructTSModel</a>  and assigns the result to the private attribute <code>tbats</code>; if <code>destroy = F</code> then sets <code>NA</code> as the value of private attribute <code>struct_ts</code></p></li>
+<li><p><strong>setCWEs(cwe_input)</strong> extracts start year, end year, end month, time series data and CWE IDs from argument <code>cwe_input</code> of class <a href='CWE.html'>CWE</a>; gives values to private attributes <code>start_year</code>, <code>end_year</code>, <code>cwes</code>, <code>cwes_ts</code> and <code>end_month</code></p></li>
+<li><p><strong>setBestModelList()</strong> finds the model objects corresponding to <code>CVSSForecaster</code>'s method <code>getBestAssessments</code> output and assings the list of these objects to be the value of the private attribute <code>best_model_list</code></p></li>
 </ul></p>
     
 
@@ -133,7 +161,7 @@ cf &lt;- CVSSForecaster$new()
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
-      <li><a href="#usage">Usage</a></li>
+      <li><a href="#private-attributes">Private attributes</a></li>
 
       <li><a href="#public-methods">Public methods</a></li>
           </ul>

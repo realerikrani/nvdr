@@ -29,16 +29,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="reference/index.html">Reference</a>
+  <a href="reference/index.html">Documentation</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -72,6 +89,11 @@ output:
 <p>Install <em>nvdr</em> from GitHub.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"remotes"</span>)
 remotes<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"realerikrani/nvdr"</span>)</code></pre></div>
+</div>
+<div id="documentation-and-user-guide" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation-and-user-guide" class="anchor"></a>Documentation and User Guide</h2>
+<p><a href="https://realerikrani.github.io/nvdr/" class="uri">https://realerikrani.github.io/nvdr/</a></p>
 </div>
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
@@ -122,7 +144,7 @@ cf<span class="op">$</span><span class="kw">getAllAssessments</span>()
 ## Save a list of current models with best forecast accuracy.
 cf<span class="op">$</span><span class="kw">setBestModelList</span>()
 ## Plot the best models list
-cf<span class="op">$</span><span class="kw">getPlots</span>((cf<span class="op">$</span><span class="kw">getBestModelList</span>()))
+cf<span class="op">$</span><span class="kw">getPlots</span>(cf<span class="op">$</span><span class="kw">getBestModelList</span>())
 ## Merge the best models' (for each CWE based on the best forecast accuracy) training and test data into new training data for forecasts of the unknown future of 9 months.
 list_of_unseen_future_forecasts &lt;-<span class="st"> </span>cf<span class="op">$</span><span class="kw">useBest</span>(<span class="dv">9</span>)
 ## Plot the used best models' new forecasts
@@ -130,42 +152,7 @@ cf<span class="op">$</span><span class="kw">plotUseBest</span>(list_of_unseen_fu
 ## Assuming that some time has gone past and a new CWE object `c2`
 ## has been created containing time series test data, one can find out the forecast accuracy and add the obtained actual values to plots
 cf<span class="op">$</span><span class="kw">assessUseBest</span>(list_of_unseen_future_forecasts, c2<span class="op">$</span><span class="kw">getTimeSeriesData</span>())
-cf<span class="op">$</span><span class="kw">plotUseBest</span>(list_of_unseen_future_forecasts, <span class="dt">row_no =</span> <span class="dv">5</span>, <span class="dt">col_no =</span> <span class="dv">2</span>, <span class="dt">actual =</span> c2<span class="op">$</span><span class="kw">getTimeSeriesData</span>())
-
-## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
-   <span class="kw">setBenchmark</span>() ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).
-   <span class="kw">setARIMA</span>()
-   <span class="kw">setETS</span>()
-   <span class="kw">setTSLinear</span>()
-   <span class="kw">setNNAR</span>()
-   <span class="kw">setARFIMA</span>()
-   <span class="kw">setBaggedETS</span>()
-   <span class="kw">setTBATS</span>()
-   <span class="kw">setStructTS</span>()
-   <span class="kw">getCWENames</span>()
-   <span class="kw">getSeries</span>()
-   <span class="kw">getBestAssessments</span>()
-   <span class="kw">getAllAssessments</span>()
-   
-## Available for class CWE. See the source code to understand specific use cases.
-  <span class="kw">getStartYear</span>()
-  <span class="kw">getEndYear</span>(<span class="dt">plus_one =</span> F)
-  <span class="kw">getStartMonth</span>(<span class="dt">as_number =</span> F)
-  <span class="kw">getEndMonth</span>(<span class="dt">as_number =</span> F, <span class="dt">plus_one =</span> F)
-  <span class="kw">getBaseData</span>()
-  <span class="kw">getTimeSeriesData</span>()
-  <span class="kw">setStartYear</span>(year)
-  <span class="kw">setEndYear</span>(year)
-  <span class="kw">setStartMonth</span>(smonth)
-  <span class="kw">setEndMonth</span>(emonth)
-  <span class="kw">setBaseData</span>(files)
-  <span class="kw">setTimeSeriesData</span>(ts_data)
-  <span class="kw">getAnalysisData</span>()
-  <span class="kw">getMostInstances</span>(<span class="dt">threshold =</span> <span class="dv">100</span>)
-  <span class="kw">getMostCritical</span>(<span class="dt">min_score =</span> <span class="fl">4.0</span>)
-  <span class="kw">getChanging</span>(<span class="dt">period_threshold =</span> <span class="dv">200</span>)
-  <span class="kw">getInterestingMonthlyData</span>(<span class="dt">threshold =</span> <span class="dv">100</span>, <span class="dt">min_score =</span> <span class="fl">4.0</span>, <span class="dt">period_threshold =</span> <span class="dv">200</span>, <span class="dt">as_monthly_ts =</span> T)
-  <span class="kw">getMonthlyData</span>(desired_cwes)</code></pre></div>
+cf<span class="op">$</span><span class="kw">plotUseBest</span>(list_of_unseen_future_forecasts, <span class="dt">row_no =</span> <span class="dv">5</span>, <span class="dt">col_no =</span> <span class="dv">2</span>, <span class="dt">actual =</span> c2<span class="op">$</span><span class="kw">getTimeSeriesData</span>())</code></pre></div>
 <p>Look at the included binary data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(nvd)</code></pre></div>
 </div>
@@ -180,8 +167,9 @@ cf<span class="op">$</span><span class="kw">plotUseBest</span>(list_of_unseen_fu
 <p>The forecasts of <em>nvdr</em> rely on the methods provided by R package <em>forecast</em>.</p>
 <pre><code>@Manual{,
   title = {{forecast}: Forecasting functions for time series and linear models},
-  author = {Rob J Hyndman},
+  author = {Rob Hyndman and Christoph Bergmeir and Gabriel Caceres and Mitchell O'Hara-Wild and Slava Razbash and Earo Wang},
   year = {2017},
+  note = {R package version 8.3},
   url = {http://pkg.robjhyndman.com/forecast},
 }</code></pre>
 <p>Furthermore, residuals are checked in <em>nvdr</em> by using the ideas from <a href="https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R" class="uri">https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R</a>. The exact way of lag calculations from that file are used in <em>nvdr</em>.</p>
@@ -206,7 +194,6 @@ cf<span class="op">$</span><span class="kw">plotUseBest</span>(list_of_unseen_fu
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="license"></a></li>
-<li><a href="http://www.repostatus.org/#wip"><img src="http://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public."></a></li>
 <li><a href="https://travis-ci.org/realerikrani/nvdr"><img src="https://travis-ci.org/realerikrani/nvdr.svg?branch=master" alt="Travis-CI Build Status"></a></li>
 </ul>
 </div>

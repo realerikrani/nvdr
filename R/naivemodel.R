@@ -1,3 +1,35 @@
+#' Class NaiveModel
+#'
+#' Represents naive models.
+#'
+#' @section Direct Superclass:{
+#' \itemize{
+#' \item \link{FcastModel}
+#' }
+#' }
+#
+#' @section Important Dependencies: {
+#' \itemize{
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/naive.html}{forecast::naive}
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/forecast.html}{forecast::forecast}
+#' }
+#' }
+#'
+#'
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{buildModel()} passes on forecasting functions to \link{FcastModel}'s methods \code{considerBoxCox} and \code{considerBootstrap}; allows to choose whether forecast intervals should be generated from bootstrapped residuals and whether using Box-Cox transformation and bias-adjustment would result in better overall forecast accuracy; calls a \link{FcastModel}'s method \code{analyseResiduals} which checks whether residuals are not independently distributed and not normally distributed
+#'   \item \strong{useModel(fcast_period)} calls \link{FcastModel}'s method \code{executeUseModel} to forecast \code{fcast_period}-step ahead future; passes on the same fitting and forecasting functions as \code{buildmodel()}
+#' }
+#' }
+#'
+#' @keywords internal
+#'
+#' @importFrom R6 R6Class
+#' @name NaiveModel
+#' @export
+#'
+NULL
 NaiveModel <- R6::R6Class(
   "NaiveModel",
   inherit = FcastModel,

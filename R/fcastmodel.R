@@ -1,6 +1,40 @@
-#' ...
+#' Class FcastModel
 #'
-#' ...
+#' @section Direct Superclass:{
+#' \itemize{
+#' \item \link{NVDModel}
+#' }
+#' }
+#'
+#' @section Direct Subclasses:{
+#' \itemize{
+#' \item \link{BenchmarkModel},
+#' \item \link{MeanModel},
+#' \item \link{DriftModel},
+#' \item \link{NaiveModel},
+#' \item \link{SeasonalNaiveModel}
+#' }
+#' }
+#
+#'
+#' @section Private attributes:{
+#' \itemize{
+#'   \item \strong{box_cox_applied} logical value indicating whether the Box-Cox transformation was applied (default F)
+#' }
+#' }
+#'
+#'
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{considerBoxCox(fcast, fcast_bc)} selects the best forecasts between those where the Box-Cox transformation is used and those, where it is not used; sets thre result by using \code{super$setFcasted}
+#'   \item \strong{analyseResiduals(df)} analyses the residuals with the given degree of freedom value
+#'   \item \strong{considerBootstrap(fcast, fcast_bc)} generates forecast intervals from bootstrapped residuals when \code{super$areResidualsNotNormal() & !super$areResidualsNotRandom()}; takes into account whether the Box-Cox transformation was beneficial to use or not
+#'   \item \strong{executeUseModel(fcast, fcast_bc)} calls the forecast function with training set obtained by calling \code{super$getMergedTrainTestSet()}; applies the Box-Cox transformation when \code{self$isBoxCoxApplied() == TRUE}
+#'   \item \strong{isBoxCoxApplied()} returns private attribute \code{box_cox_applied}
+#'   \item \strong{setBoxCoxApplied(logical_value)} assings the \code{logical_value} to private attribute \code{box_cox_applied}
+#' }
+#' }
+#'
 #' @keywords internal
 #'
 #' @importFrom R6 R6Class
@@ -8,8 +42,6 @@
 #' @export
 #'
 NULL
-
-#' @export
 FcastModel <- R6::R6Class(
   "FcastModel",
   inherit = NVDModel,

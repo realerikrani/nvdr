@@ -1,3 +1,35 @@
+#' Class ETSModel
+#'
+#' Represents ETS models.
+#'
+#' @section Direct Superclass:{
+#' \itemize{
+#' \item \link{FitModel}
+#' }
+#' }
+#'
+#' @section Important Dependencies: {
+#' \itemize{
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/ets.html}{forecast::ets}
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/forecast.html}{forecast::forecast}
+#' }
+#' }
+#'
+#'
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{buildModel()} passes on fitting and forecasting functions to \link{FitModel}'s method \code{setFittedFcasted}; applies Box-Cox transformation and bias-adjustment; passes function which checks whether residuals are not independently distributed; allows generating forecast intervals from bootstrapped residuals if necessary
+#'   \item \strong{useModel(fcast_period)} calls \link{FitModel}'s method \code{executeUseModel} to fit model and forecast \code{fcast_period}-step ahead future; passes on the same fitting and forecasting functions as \code{buildmodel()}
+#' }
+#' }
+#'
+#' @keywords internal
+#'
+#' @importFrom R6 R6Class
+#' @name ETSModel
+#' @export
+#'
+NULL
 ETSModel <- R6::R6Class(
   "ETSModel",
   inherit = FitModel,

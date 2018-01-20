@@ -5,3 +5,4 @@
 data-raw/*.xml
 README_files/
 README.html
+inst/doc

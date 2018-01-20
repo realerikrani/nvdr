@@ -1,0 +1,290 @@
+---
+title: "Forecasting the Mean Monthly CVSS Scores"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this guide, the existing data that are included with the package are put into use. This means working with vulnerability entries from CVE-2011 to CVE-2016 as of 7 October 2017. The data have been preprocessed by `nvdr::get_nvd_entries` and are accessible through `nvdr::nvd`.
+
+## Prepare the Time Series
+
+A new CWE object `c` is created. Then the method `setBaseData()` without arguments sets the preprocessed data to be the value of the `CWE` object's private attribute `base_data`. The method `setTimeSeriesData` takes a time series `ts` object and sets that to be the value of the `CWE` object's private attribute `time_series_data`.
+
+The time series data is prepared by the method `getInterestingMonthlyData` which selects a subset of CWEs based on three different criteria (see the documentation of class `CWE`).
+
+```{r, eval=FALSE}
+c <- CWE$new()
+c$setBaseData()
+c$setTimeSeriesData(c$getInterestingMonthlyData())
+```
+
+
+## Prepare the Forecasting Object
+
+A new CVSSForecaster object `cf` is created. The previously created CWE object `c` is used as an input that defines the CWE names, the time series and time period that `cf` can use.
+
+```{r, eval=FALSE}
+cf <- CVSSForecaster$new()
+cf$setCWEs(c)
+```
+
+## Generate Forecasts
+
+Make the `cf` object to generate forecasts of 13 different types of models as `setBenchmark` chooses the benchmark model after comparing the accuracy of 4 different benchmark models and `setTBATS` can give `BATS` or `TBATS` models as output. Executing all the following commands takes multiple minutes. Creating Bagged ETS, ARIMA and NNAR models is time-consuming.
+
+```{r, eval=FALSE}
+cf$setBenchmark()
+cf$setTSLinear()
+cf$setETS()
+cf$setStructTS()
+cf$setBaggedETS()
+cf$setARIMA(stepwise = F, approximation = F)
+cf$setARFIMA()
+cf$setNNAR(pi_simulation = T)
+cf$setTBATS()
+```
+
+Once the process is finished, the results can be analysed. The results will not be the same after every run as some model creation (bagged ETS and neural network models) include randomness during the results creation process.
+
+## Initial Steps with the Results
+
+For each CWE, the best models which have the best overall forecast accuracy results (MAE, RMSE, MAPE, MASE) can be found. The error measures are calculated on the test set.
+```{r, eval=FALSE}
+cf$getBestAssessments()
+```
+
+The best model objects can be saved in `cf` object.
+
+```{r, eval=FALSE}
+cf$setBestModelList()
+```
+
+Now, the best model objects can be retrieved as a list. This is useful later.
+
+```{r, eval=FALSE}
+cf$getBestModelList()
+```
+
+Also, all the created models can be retrieved as a list. For example to retrieve all selected benchmark models, the following command should be executed.
+
+```{r, eval=FALSE}
+cf$getBenchmark()
+```
+
+The lists of specific types of models also provide an opportunity to access specific CWE. For example, if it is known that CWE-119 is in the list, then its object can be retrieved.
+
+```{r, eval=FALSE}
+cf$getBenchmark("CWE-119")
+```
+
+### Storing the Results for Later Use
+
+At this point in time, it is useful to save `CWE` object `c` and `CVSSForecaster` object `cf` to an `.rda` file in order to use them later. The command
+
+```{r, eval=FALSE}
+getwd()
+```
+
+will show the working directory, where the resulting file will be saved. The following command saves the two objects into a file called "2016.rda".
+
+```{r, eval=FALSE}
+save(cf, c, file = "2016.rda")
+```
+
+In order to load the objects from the file into a new R session with an empty environment, the following command should be executed. It makes the saved `CWE` object `c` and `CVSSForecaster` object `cf` appear in the environment.
+
+```{r, eval=FALSE}
+load("2016.rda")
+```
+
+## Plots
+
+The best models list can be plotted. For additional information, [forecast::plot.forecast](http://pkg.robjhyndman.com/forecast/reference/plot.forecast.html) can be read. Point forecasts for 2016 are represented by blue lines. Actual values of 2016 as red lines are added to the plots. 
+
+```{r, eval=FALSE}
+cf$getPlots(cf$getBestModelList())
+```
+
+The results from some specific type of available model can be plotted as well.
+
+```{r, eval=FALSE}
+cf$getPlots(cf$getTSLinear())
+```
+
+## A Closer Look
+
+The results from some specific type of available model for a specific avalable CWE can be plotted.
+
+```{r, eval=FALSE}
+cf$getTSLinear("CWE-119")$getPlot()
+```
+
+As presented before, `cf$getBestAssessments()` enabled to find the best model for each CWE. Given that an ETS(A,N,N) model was chosen for CWE-119, one can examine it further.
+
+Observe its plot.
+
+```{r, eval=FALSE}
+cf$getETS("CWE-119")$getPlot()
+```
+
+![](https://www.dropbox.com/s/0iga87vd6e7h8q4/2016_cwe119.png?raw=1)
+
+Different details could be revealed by accessing the object's forecasts and using the `summary` function.
+
+```{r, eval=FALSE}
+> summary(cf$getETS("CWE-119")$getFcasted())
+
+Forecast method: ETS(A,N,N)
+
+Model Information:
+ETS(A,N,N) 
+
+Call:
+ forecast::ets(y = train, lambda = super$findLambda(train), biasadj = T) 
+
+  Box-Cox transformation: lambda= -0.739 
+
+  Smoothing parameters:
+    alpha = 0.2138 
+
+  Initial states:
+    l = 1.074 
+
+  sigma:  0.0149
+
+      AIC      AICc       BIC 
+-253.0855 -252.6569 -246.8025 
+
+Error measures:
+                      ME      RMSE       MAE       MPE     MAPE      MASE        ACF1
+Training set -0.05281217 0.5416452 0.4264229 -1.068501 5.465742 0.5984883 -0.01617852
+
+Forecasts:
+         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+Jan 2016       7.918037 7.242279 8.635749 6.937559 9.084684
+Feb 2016       7.919510 7.228802 8.654115 6.918447 9.115394
+Mar 2016       7.920983 7.215658 8.672150 6.899837 9.145614
+Apr 2016       7.922455 7.202827 8.689874 6.881696 9.175378
+May 2016       7.923928 7.190290 8.707307 6.863997 9.204713
+Jun 2016       7.925401 7.178029 8.724466 6.846713 9.233646
+Jul 2016       7.926874 7.166030 8.741365 6.829822 9.262199
+Aug 2016       7.928346 7.154278 8.758020 6.813300 9.290395
+Sep 2016       7.929819 7.142760 8.774442 6.797131 9.318253
+Oct 2016       7.931292 7.131465 8.790644 6.781294 9.345790
+Nov 2016       7.932765 7.120382 8.806637 6.765774 9.373024
+Dec 2016       7.934237 7.109500 8.822431 6.750556 9.399968
+```
+
+When the object's plot did not have an exclamation mark as part of its y-axis label, then it gives an indication that the model's residuals were satisfying the assumtptions. It can be checked.
+
+```{r, eval=FALSE}
+> cf$getETS("CWE-119")$areResidualsNotRandom() 
+[1] FALSE
+> cf$getETS("CWE-119")$areResidualsNotNormal()
+[1] FALSE
+```
+
+The `NVDModel`, `CVSSForecaster`, `FitModel` and `FcastModel` documentation gives introduces some other useful methods which can be called using a model object or a list of model objects. For example `cf$getETS("CWE-59")$isBootstrapNotUsed()`, `cf$getETS("CWE-59")$getAssessment()`, `cf$getAllAssessments()`, `cf$getBenchmark("CWE-20")$isBoxCoxApplied()`.
+
+Sometimes ACF-plots must be examined. This could be done with the help of the [forecast](http://pkg.robjhyndman.com/forecast/index.html) package:
+```{r, eval=FALSE}
+forecast::checkresiduals(cf$getNNAR("CWE-79")$getFcasted(), plot = T)
+```
+
+## The Unseen Future
+
+The best models' training and test data can be merged into new training data for forecasts of the unknown future of 12 months. For each CWE the method `useBest` uses the type of model that were chosen as the best for 2016 to generate forecasts for 2017 with the new training set.
+
+```{r, eval=FALSE}
+list_of_unseen_future_forecasts <- cf$useBest(12)
+```
+
+The used best models' new forecasts can be plotted
+
+```{r, eval=FALSE}
+cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2)
+```
+
+It could be useful to store these results as well for later use.
+
+```{r, eval=FALSE}
+save(list_of_unseen_future_forecasts, file = "2017basedon2016withnewtestset.rda")
+```
+
+Assuming that some time has gone past and the previously unseen 2017 has taken place. A new CWE object `c2`
+can be created containing time series test data. It is assumed that up-to-date XML files from https://nvd.nist.gov/vuln/data-feeds#CVE_FEED have been downloaded to the working directory. It is assumed that the prefviously created `CVSSForecaster` object `cf`is also loaded into the environment. Based on the CWEs of `cf`, the necessary 2017 time series data with actual monthly mean CVSS scores are extracted.
+
+```{r, eval=FALSE}
+c2 <- CWE$new()
+c2$setStartYear(2017)
+c2$setEndYear(2017)
+c2$setBaseData(c("nvdcve-2.0-2011.xml","nvdcve-2.0-2012.xml","nvdcve-2.0-2013.xml","nvdcve-2.0-2014.xml","nvdcve-2.0-2015.xml","nvdcve-2.0-2016.xml","nvdcve-2.0-2017.xml"))
+c2$setTimeSeriesData(c2$getMonthlyData(cf$getCWENames()))
+```
+
+One can now find out the forecast accuracy for the forecasts in `list_of_unseen_future_forecasts`
+```{r, eval=FALSE}
+cf$assessUseBest(list_of_unseen_future_forecasts, c2$getTimeSeriesData())
+```
+
+Plots with the actual values can be generated
+```{r, eval=FALSE}
+cf$assessUseBest(list_of_unseen_future_forecasts, c2$getTimeSeriesData())
+cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2, actual = c2$getTimeSeriesData())
+```
+
+The new `CWE` object `c2` can be later modified and used in the same way for 2017 as `CWE` object `c` as used for 2016.
+
+```{r, eval=FALSE}
+c2$setStartYear(2011)
+c2$setTimeSeriesData(c2$getInterestingMonthlyData())
+## CVSSForecaster object cf2 for 2017
+cf2 <- CVSSForecaster$new()
+cf2$setCWEs(c2)
+## ... build models, assess models, find best, analyse best, use best for unseen 2018
+```
+
+The unseen future list is a list of lists, where each list has two elements: CWE ID and the "forecast" object. In order to analyse that more closely, the following commands could be used. Sometimes it might be useful to keep the previously used `CVSSForecaster` object in memory as well to check whether forecast intervals were previously generated from bootstrapped residuals (`useBest` puts into use the best models; if these were using bootstrapped forecast intervals, then the forecast intervals by `useBest` method execution are using this techinque as well).
+
+```{r, eval=FALSE}
+## Extract the first object's "forecast" object
+u1 <- list_of_unseen_future_forecasts[[1]]$future
+
+## Plot with ggplot2
+ggplot2::autoplot(u264)
+
+## Check that the mean of residuals is close to zero
+mean(zoo::na.approx(stats::residuals(u1)))
+
+## Check the summary
+summary(u1)
+
+## Perform the Shapiro-Wilk test and get the p-value
+stats::shapiro.test(zoo::na.approx(stats::residuals(u1)))$p.value
+
+## Check whether the residuals are independently distributed (set plot = T if Ljung-Box or Breusch-Godfrey is not preformed to check the ACF plot)
+forecast::checkresiduals(u1, plot = F)
+
+## Let's assume that the best model type was ARIMA. Check whether previously forecast intervals were generated from bootstrapped residuals (if yes, then they are generated from bootstrapped residuals now as well)
+cf$getARIMA(list_of_unseen_future_forecasts[[1]]$cwe)$isBootstrapNotUsed()
+
+## Observe the training set
+u1$x
+
+## When Box-Cox transformation is applied, sometimes the lambda is available this way
+u1$lambda
+## ... or that way
+u1$model$lambda
+## ... sometimes it is necessary to recalculate it to find out what the lambda was
+forecast::BoxCox.lambda(u1$x)
+```

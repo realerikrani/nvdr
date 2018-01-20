@@ -2,50 +2,82 @@
 % Please edit documentation in R/nvdmodel.R
 \name{NVDModel}
 \alias{NVDModel}
-\title{...}
+\title{Class NVDModel}
 \description{
-...
+Manages forecasts of one CWE.
 }
+\section{Direct Subclasses}{
+{
+\itemize{
+\item \link{FitModel},
+\item \link{FcastModel}
+}
+}
+}
+
+\section{Private attributes}{
+{
+\itemize{
+  \item \strong{cwe} CWE ID (default NA)
+  \item \strong{start_year} the first year of a time period (default NA)
+  \item \strong{end_year} the last year of a time period (default NA)
+  \item \strong{train} the training set (default NA)
+  \item \strong{test} the test set (default NA)
+  \item \strong{fcast} the forecasts as a "\code{forecast}" object (default NA)
+  \item \strong{assessment} the MAE, RMSE, MAPE and MASE in \code{numeric} form (default NA)
+  \item \strong{fcast_period} the number of months necessary to forecast (default NA)
+  \item \strong{residuals_not_random} the logical value indicating whether the models' residuals are not uncorrelated; cannot be used in the cases of \link{ARFIMAModel}, \link{BaggedETSModel}, \link{StructTSModel} and \link{NNARModel} for which ACF plots must be used instead (default F)
+  \item \strong{residuals_not_normal} the logical value indicating whether the models' residuals are not normally distributed (default F)
+  \item \strong{bootstrap_not_used} the logical value indicating whether the forecast intervals were not generated from bootstrapped residuals (default T)
+  \item \strong{pi_ignored} the logical value; when F, then the forecast intervals can be taken seriously, otherwise the model's residuals must be checked (default F)
+  \item \strong{significance_level} the significance level used in the Shapiro-Wilk, Ljung-Box and Breusch-Godfrey hypothesis cheking (default 0.05)
+  \item \strong{measures = c("MAE", "RMSE", "MAPE", "MASE")} a \code{character} vector attribute used in the source code
+  \item \strong{tset_char = "Test set"} a \code{character} attribute used in the source code (default F)
+}
+}
+}
+
 \section{Public methods}{
 {
 \itemize{
-  \item \strong{$new(cwe, cwe_ts, start_year, end_year, end_month)} creates new NVD object
-  \item \strong{$getStartYear()} item
-  \item \strong{$getEndYear()}
-  \item \strong{$getTrainingSet()} ...
-  \item \strong{$getTestSet()} ...
-  \item \strong{$getFcasted()} ...
-  \item \strong{$getMethod()} ...
-  \item \strong{$getAssessment()} ...
-  \item \strong{$getFcastPeriod()} ...
-  \item \strong{$getTSetChar()} ...
-  \item \strong{$getResiduals()} ...
-  \item \strong{$getMergedTrainTestSet()} ...
-  \item \strong{$getSignificanceLevel()} ...
-  \item \strong{$areResidualsNotRandom()} ...
-  \item \strong{$areResidualsNotNormal()} ...
-  \item \strong{$isPiIgnored()} ...
-  \item \strong{$isBootstrapNotUsed()} ...
-  \item \strong{$setSignificanceLevel()} ...
-  \item \strong{$setResidualsNotRandom()} ...
-  \item \strong{$setBootstrapNotUsed()} ...
-  \item \strong{$setPiIgnored()} ...
-  \item \strong{$setFcasted()} ...
-  \item \strong{$setFcastPeriod()} ...
-  \item \strong{$assessModel()} ...
-  \item \strong{$testResidualsRandomnessBox()} ...
-  \item \strong{$testResidualsRandomnessBreusch()} ...
-  \item \strong{$testResidualsNormality()} ...
-  \item \strong{$getPlot()} ...
-  \item \strong{$compareCombinedAccuracy()} ...
-  \item \strong{$findLambda()} ...
+  \item \strong{new(cwe, cwe_ts, start_year, end_year, end_month)} creates new NVD object
+  \item \strong{getStartYear()} returns private attribute \code{start_year}
+  \item \strong{getEndYear()} returns private attribute \code{end_year}
+  \item \strong{getTrainingSet()} returns private attribute \code{train}
+  \item \strong{getTestSet()} returns private attribute \code{test}
+  \item \strong{getFcasted()} returns private attribute \code{fcast}
+  \item \strong{getMethod()} returns attribute \code{method} of private attribute \code{fcast}
+  \item \strong{getAssessment()} returns private attribute \code{assessment}
+  \item \strong{getFcastPeriod()} returns private attribute \code{fcast_period}
+  \item \strong{getTSetChar()} returns private attribute \code{tset_char}
+  \item \strong{getResiduals(model)} returns residuals from \code{model} processed by \code{zoo::na.approx}; \code{model} is obtained from \link{FitModel}'s method \code{getFitted} or \link{NVDModel}'s method \code{getFcasted}
+  \item \strong{getMergedTrainTestSet()} returns a \code{stats::ts} object after merging both the training set and the test set
+  \item \strong{getSignificanceLevel()} returns private attribute \code{significance_level}
+  \item \strong{areResidualsNotRandom()} returns private attribute \code{residuals_not_random}
+  \item \strong{areResidualsNotNormal()} returns private attribute \code{residuals_not_normal}
+  \item \strong{isPiIgnored()} returns private attribute \code{pi_ignored}
+  \item \strong{isBootstrapNotUsed()} returns private attribute \code{bootstrap_not_used}
+  \item \strong{setSignificanceLevel(significance)} sets \code{significance} as the value of private attribute \code{significance_level}
+  \item \strong{setResidualsNotRandom(testresult)} sets \code{testresult} as the value of private attribute \code{residuals_not_random}
+  \item \strong{setResidualsNotNormal(testresult)} sets \code{testresult} as the value of private attribute \code{residuals_not_normal}
+  \item \strong{setBootstrapNotUsed(logical_value)} sets \code{logical_value} as the value of private attribute \code{bootstrap_not_used}
+  \item \strong{setPiIgnored(logical_value)} sets \code{logical_value} as the value of private attribute \code{pi_ignored}
+  \item \strong{setFcasted(fcast_result)} sets \code{fcast_result} as the value of private attribute \code{fcast}
+  \item \strong{setFcastPeriod(period)} sets \code{period} as the value of private attribute \code{fcast_period}
+  \item \strong{assessModel()} calculates and sets MAE, RMSE, MAPE, MASE values as the value of private attribute \code{assessment}
+  \item \strong{testResidualsRandomnessBox(residuals, df)} uses residuals and degrees of freedom arguments and performs the Ljung-Box test; returns whether the obtained p-value is less or equal than the significance level
+  \item \strong{testResidualsRandomnessBreusch(residuals, df, fitted_model)} uses residuals, degrees of freedom and fitted model arguments and performs the Breusch-Godfrey test; returns whether the obtained p-value is less or equal than the significance level
+  \item \strong{testResidualsNormality(residuals)} uses residuals arguments and performs the Shapiro-Wilk test; returns whether the obtained p-value is less or equal than the significance level
+  \item \strong{getPlot()} returns a plot of forecast results and actual values as a red line when the forecasting results are available in the private attribute \code{fcast}; adds an exclamation mark to y-axis label when \code{self$areResidualsNotRandom() | (self$areResidualsNotNormal() & self$isBootstrapNotUsed()) | self$isPiIgnored()}
+  \item \strong{compareCombinedAccuracy(fcast1, fcast2)} takes two collections of forecasts and returns a logical value indicating whether the first collection of forecasted values has bigger amount of smaller MAE, RMSE, MAPE and MASE values than the other collection of forecasted values
+  \item \strong{findLambda(training_set)} returns the lambda found by \href{http://pkg.robjhyndman.com/forecast/reference/BoxCox.lambda.html}{forecast::BoxCox.lambda} based on the training set
 }
 }
 }
 
 \section{Note}{
  {
-This class's private function `residuals_lag` is using GPL-3 licensed code from (R package "forecast"
+This class's private method `residuals_lag` is using GPL-3 licensed code from (R package "forecast"
 by Rob Hyndman, Mitchell O'Hara-Wild, Christoph Bergmeir, Slava Razbash
 and Earo Wang)
 \href{https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R}{https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R}

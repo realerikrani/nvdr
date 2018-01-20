@@ -1,3 +1,38 @@
+#' Class BenchmarkModel
+#'
+#' @section Direct Superclass:{
+#' \itemize{
+#' \item \link{FcastModel}
+#' }
+#' }
+#'
+#' @section Private attributes:{
+#' \itemize{
+#'   \item \strong{mean_model} the attribute for holding a \link{MeanModel} objects (default NA)
+#'   \item \strong{drift_model} the attribute for holding a list of \link{DriftModel} objects (default NA)
+#'   \item \strong{naive_model} the attribute for holding a list of \link{NaiveModel} objects (default NA)
+#'   \item \strong{snaive_model} the attribute for holding a list of \link{SeasonalNaiveModel} objects (default NA)
+#' }
+#' }
+#'
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{buildModel()} builds mean, drift, naive and seasonal naive models, measures the forecast accuracy and selects the best model that has the biggest number of the lowest MAE, RMSE, MASE and MAPE scores;
+#'   \item \strong{useModel(fcast_period)} uses the selected best model type to generate forecasts \code{fcast_period}-steps ahead into the future
+#'   \item \strong{getMeanModel()} returns private attribute \code{mean_model}
+#'   \item \strong{getDriftModel()} returns private attribute \code{drift_model}
+#'   \item \strong{getNaiveModel()} returns private attribute \code{naive_model}
+#'   \item \strong{getSNaiveModel()} returns private attribute \code{snaive_model}
+#' }
+#' }
+#'
+#' @keywords internal
+#'
+#' @importFrom R6 R6Class
+#' @name BenchmarkModel
+#' @export
+#'
+NULL
 BenchmarkModel <- R6::R6Class(
   "BenchmarkModel",
   inherit = FcastModel,

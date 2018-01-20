@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>... — FcastModel â€¢ nvdr</title>
+<title>Class FcastModel — FcastModel â€¢ nvdr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -75,20 +90,61 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>...</h1>
+    <h1>Class FcastModel</h1>
     </div>
 
     
-    <p>...</p>
+    <p>Class FcastModel</p>
     
 
         
+    <h2 class="hasAnchor" id="direct-superclass"><a class="anchor" href="#direct-superclass"></a>Direct Superclass</h2>
+
+    <p><ul>
+<li><p><a href='NVDModel.html'>NVDModel</a></p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="direct-subclasses"><a class="anchor" href="#direct-subclasses"></a>Direct Subclasses</h2>
+
+    <p><ul>
+<li><p><a href='BenchmarkModel.html'>BenchmarkModel</a>,</p></li>
+<li><p><a href='MeanModel.html'>MeanModel</a>,</p></li>
+<li><p><a href='DriftModel.html'>DriftModel</a>,</p></li>
+<li><p><a href='NaiveModel.html'>NaiveModel</a>,</p></li>
+<li><p><a href='SeasonalNaiveModel.html'>SeasonalNaiveModel</a></p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="private-attributes"><a class="anchor" href="#private-attributes"></a>Private attributes</h2>
+
+    <p><ul>
+<li><p><strong>box_cox_applied</strong> logical value indicating whether the Box-Cox transformation was applied (default F)</p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="public-methods"><a class="anchor" href="#public-methods"></a>Public methods</h2>
+
+    <p><ul>
+<li><p><strong>considerBoxCox(fcast, fcast_bc)</strong> selects the best forecasts between those where the Box-Cox transformation is used and those, where it is not used; sets thre result by using <code>super$setFcasted</code></p></li>
+<li><p><strong>analyseResiduals(df)</strong> analyses the residuals with the given degree of freedom value</p></li>
+<li><p><strong>considerBootstrap(fcast, fcast_bc)</strong> generates forecast intervals from bootstrapped residuals when <code>super$areResidualsNotNormal() &amp; !super$areResidualsNotRandom()</code>; takes into account whether the Box-Cox transformation was beneficial to use or not</p></li>
+<li><p><strong>executeUseModel(fcast, fcast_bc)</strong> calls the forecast function with training set obtained by calling <code>super$getMergedTrainTestSet()</code>; applies the Box-Cox transformation when <code>self$isBoxCoxApplied() == TRUE</code></p></li>
+<li><p><strong>isBoxCoxApplied()</strong> returns private attribute <code>box_cox_applied</code></p></li>
+<li><p><strong>setBoxCoxApplied(logical_value)</strong> assings the <code>logical_value</code> to private attribute <code>box_cox_applied</code></p></li>
+</ul></p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      
+      <li><a href="#direct-superclass">Direct Superclass</a></li>
+
+      <li><a href="#direct-subclasses">Direct Subclasses</a></li>
+
+      <li><a href="#private-attributes">Private attributes</a></li>
+
+      <li><a href="#public-methods">Public methods</a></li>
+          </ul>
 
   </div>
 </div>

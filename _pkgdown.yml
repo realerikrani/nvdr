@@ -1,16 +1,46 @@
 title: nvdr
 url: https://realerikrani.github.io/nvdr
 reference:
-  - title: Classes
+  - title: Classes for the User
     contents:
     - CWE
     - CVSSForecaster
     - NVDModel
+  - title: Internal Classes
+    contents:
     - FcastModel
+    - BenchmarkModel
+    - MeanModel
+    - DriftModel
+    - NaiveModel
+    - SeasonalNaiveModel
     - FitModel
-  - title: Functions
+    - ARIMAModel
+    - ARFIMAModel
+    - BaggedETSModel
+    - ETSModel
+    - NNARModel
+    - StructTSModel
+    - TBATSModel
+    - TSLinearModel
+  - title: Functions for the User
     contents:
     - get_nvd_entries
   - title: Data
     contents:
     - nvd
+navbar:
+  title: nvdr
+  left:
+  - text: Documentation
+    href: reference/index.html
+  right:
+    - text: "User Guide"
+      menu:
+      -  text: Installation
+         href: articles/installation.html
+      -  text: Forecasting
+         href: articles/forecasting.html
+    - icon: fa-github fa-lg
+      text: "Source Code"
+      href: https://github.com/realerikrani/nvdr/

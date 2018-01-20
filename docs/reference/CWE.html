@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CWE data handler — CWE â€¢ nvdr</title>
+<title>Class CWE — CWE â€¢ nvdr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -75,44 +90,50 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>CWE data handler</h1>
+    <h1>Class CWE</h1>
     </div>
 
     
-    <p>Manage the data that forms the basis of the forecasts</p>
+    <p>Manages the data that forms the basis of the forecasts.</p>
     
 
         
-    <h2 class="hasAnchor" id="usage"><a class="anchor" href="#usage"></a>Usage</h2>
+    <h2 class="hasAnchor" id="private-attributes"><a class="anchor" href="#private-attributes"></a>Private attributes</h2>
 
-    
-    <pre>
-## Create new CWE object.
-cf &lt;- CWE$new()
-</pre>
+    <p><ul>
+<li><p><strong>start_year</strong> the first year of a time period (default 2011)</p></li>
+<li><p><strong>end_year</strong> the last year of a time period (default 2016)</p></li>
+<li><p><strong>start_month</strong> the first month of a time period (default 1)</p></li>
+<li><p><strong>end_month</strong> the last month of a time period (default 12)</p></li>
+<li><p><strong>base_data</strong> the attribute for holding data extracted from XML (default NA)</p></li>
+<li><p><strong>time_series_data</strong> the attribute for holding the <code><a href='http://www.rdocumentation.org/packages/stats/topics/ts'>stats::ts</a></code> time series type of data after processing <code>base data</code> (default NA)</p></li>
+<li><p><strong>pub_cwe_cvss = c("published", "cwe", "cvss_score")</strong> a <code>character</code> vector attribute used in the source code</p></li>
+<li><p><strong>pub_cwe_count =  c("published", "cwe", "count")</strong> a <code>character</code> vector attribute used in the source code</p></li>
+<li><p><strong>published = "published"</strong> a <code>character</code> attribute used in the source code</p></li>
+</ul></p>
     
     <h2 class="hasAnchor" id="public-methods"><a class="anchor" href="#public-methods"></a>Public methods</h2>
 
     <p><ul>
-<li><p><strong>$new()</strong> creates new CWE object</p></li>
-<li><p><strong>$getStartYear()</strong> item</p></li>
-<li><p><strong>$getEndYear(plus_one = F)</strong></p></li>
-<li><p><strong>$getStartMonth()</strong> ...</p></li>
-<li><p><strong>$getEndMonth()</strong> ...</p></li>
-<li><p><strong>$getBaseData()</strong> ...</p></li>
-<li><p><strong>$getTimeSeriesData()</strong> ...</p></li>
-<li><p><strong>$setStartYear()</strong> ...</p></li>
-<li><p><strong>$setEndYear()</strong> ...</p></li>
-<li><p><strong>$setStartMonth()</strong> ...</p></li>
-<li><p><strong>$setEndMonth()</strong> ...</p></li>
-<li><p><strong>$setBaseData()</strong> ...</p></li>
-<li><p><strong>$setTimeSeriesData()</strong> ...</p></li>
-<li><p><strong>$getAnalysisData()</strong> ...</p></li>
-<li><p><strong>$getMostInstances()</strong> ...</p></li>
-<li><p><strong>$getMostCritical()</strong> ...</p></li>
-<li><p><strong>$getChanging()</strong> ...</p></li>
-<li><p><strong>$getInterestingMonthlyData()</strong> ...</p></li>
-<li><p><strong>$getMonthlyData()</strong> ...</p></li>
+<li><p><strong>new()</strong> creates new CWE object</p></li>
+<li><p><strong>getStartYear()</strong> returns private attribute <code>start_year</code></p></li>
+<li><p><strong>getEndYear(plus_one = F)</strong> returns private attribute <code>end_year</code>; adds one if <code>plus_one = T</code></p></li>
+<li><p><strong>getStartMonth(as_number = F)</strong> returns a <code>character</code> of private attribute <code>start_month</code> (appends zero to months 1...9); returns private attribute <code>start_month</code> if <code>as_number = T</code></p></li>
+<li><p><strong>getEndMonth(as_number = F, plus_one = F)</strong> returns a <code>character</code> of private attribute <code>end_month</code> (appends zero to months 1...9); returns private attribute <code>end_month</code> if <code>as_number = T</code>; adds one if <code>plus_one = T</code></p></li>
+<li><p><strong>getBaseData()</strong> returns private attribute <code>base_data</code></p></li>
+<li><p><strong>getTimeSeriesData()</strong> returns private attribute <code>time_series_data</code></p></li>
+<li><p><strong>setStartYear(year)</strong> assings the <code>numeric</code> value of <code>year</code> to private attribute <code>start_year</code></p></li>
+<li><p><strong>setEndYear(year)</strong> assings the <code>numeric</code> value of <code>year</code> to private attribute <code>end_year</code></p></li>
+<li><p><strong>setStartMonth(smonth)</strong> assings the <code>numeric</code> value of <code>smonth</code> to private attribute <code>start_month</code></p></li>
+<li><p><strong>setEndMonth(emonth)</strong> assings the <code>numeric</code> value of <code>emonth</code> to private attribute <code>end_month</code></p></li>
+<li><p><strong>setBaseData(files)</strong> assings the output from <a href='get_nvd_entries.html'>get_nvd_entries</a>(files) to private attribute <code>base_data</code>; if the argument <code>files</code> is missing, then assings <a href='nvd.html'>nvd</a> to <code>base_data</code></p></li>
+<li><p><strong>setTimeSeriesData(ts_data)</strong> assigns the <a href='http://www.rdocumentation.org/packages/stats/topics/ts'>ts</a> value of <code>ts_data</code> to private attribute <code>time_series_data</code></p></li>
+<li><p><strong>getAnalysisData()</strong> return a <a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a> where CWEs are between the time limits set by private attributes, where each entry corresponds to one CWE and where each CWE has the date when it was published and its CVSS score (NAs are omitted)</p></li>
+<li><p><strong>getMostInstances(threshold = 100)</strong> returns CWEs which are counted at least <code>threshold</code> times in a year belonging to the time period set by private attributes</p></li>
+<li><p><strong>getMostCritical(min_score = 4.0)</strong> returns CWEs which have higher mean yearly mean (found by using summed yearly mean CVSS scores and the years count of the time period) severity score than <code>min_score</code></p></li>
+<li><p><strong>getChanging(period_threshold = 200)</strong> returns CWEs with a total count of at least <code>period_threshold</code> which mean absolute percentage change (count of the last year vs counts of other years) is higher than the median of the calculated mean absolute percentage change numbers.</p></li>
+<li><p><strong>getInterestingMonthlyData(threshold = 100, min_score = 4.0, period_threshold = 200, as_monthly_ts = T)</strong> returns the union of unique CWEs found by methods <code>getChanging</code>, <code>getMostCritical</code> and <code>getMostInstances</code>. Output is monthly time series with mean monthly CVSS scores when <code>as_monthly_ts = T</code>, otherwise a <code>character</code> vector of CWE IDs.</p></li>
+<li><p><strong>getMonthlyData(desired_cwes)</strong> returns monthly time series with mean monthly CVSS scores of all available CWEs when <code>desired_cwes</code> is missing, otherwise only for those specified in the <code>character</code> vector <code>desired_cwes</code></p></li>
 </ul></p>
     
 
@@ -121,7 +142,7 @@ cf &lt;- CWE$new()
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
-      <li><a href="#usage">Usage</a></li>
+      <li><a href="#private-attributes">Private attributes</a></li>
 
       <li><a href="#public-methods">Public methods</a></li>
           </ul>

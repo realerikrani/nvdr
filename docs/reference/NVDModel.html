@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>... — NVDModel â€¢ nvdr</title>
+<title>Class NVDModel — NVDModel â€¢ nvdr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -75,52 +90,80 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>...</h1>
+    <h1>Class NVDModel</h1>
     </div>
 
     
-    <p>...</p>
+    <p>Manages forecasts of one CWE.</p>
     
 
         
+    <h2 class="hasAnchor" id="direct-subclasses"><a class="anchor" href="#direct-subclasses"></a>Direct Subclasses</h2>
+
+    <p><ul>
+<li><p><a href='FitModel.html'>FitModel</a>,</p></li>
+<li><p><a href='FcastModel.html'>FcastModel</a></p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="private-attributes"><a class="anchor" href="#private-attributes"></a>Private attributes</h2>
+
+    <p><ul>
+<li><p><strong>cwe</strong> CWE ID (default NA)</p></li>
+<li><p><strong>start_year</strong> the first year of a time period (default NA)</p></li>
+<li><p><strong>end_year</strong> the last year of a time period (default NA)</p></li>
+<li><p><strong>train</strong> the training set (default NA)</p></li>
+<li><p><strong>test</strong> the test set (default NA)</p></li>
+<li><p><strong>fcast</strong> the forecasts as a "<code>forecast</code>" object (default NA)</p></li>
+<li><p><strong>assessment</strong> the MAE, RMSE, MAPE and MASE in <code>numeric</code> form (default NA)</p></li>
+<li><p><strong>fcast_period</strong> the number of months necessary to forecast (default NA)</p></li>
+<li><p><strong>residuals_not_random</strong> the logical value indicating whether the models' residuals are not uncorrelated; cannot be used in the cases of <a href='ARFIMAModel.html'>ARFIMAModel</a>, <a href='BaggedETSModel.html'>BaggedETSModel</a>, <a href='StructTSModel.html'>StructTSModel</a> and <a href='NNARModel.html'>NNARModel</a> for which ACF plots must be used instead (default F)</p></li>
+<li><p><strong>residuals_not_normal</strong> the logical value indicating whether the models' residuals are not normally distributed (default F)</p></li>
+<li><p><strong>bootstrap_not_used</strong> the logical value indicating whether the forecast intervals were not generated from bootstrapped residuals (default T)</p></li>
+<li><p><strong>pi_ignored</strong> the logical value; when F, then the forecast intervals can be taken seriously, otherwise the model's residuals must be checked (default F)</p></li>
+<li><p><strong>significance_level</strong> the significance level used in the Shapiro-Wilk, Ljung-Box and Breusch-Godfrey hypothesis cheking (default 0.05)</p></li>
+<li><p><strong>measures = c("MAE", "RMSE", "MAPE", "MASE")</strong> a <code>character</code> vector attribute used in the source code</p></li>
+<li><p><strong>tset_char = "Test set"</strong> a <code>character</code> attribute used in the source code (default F)</p></li>
+</ul></p>
+    
     <h2 class="hasAnchor" id="public-methods"><a class="anchor" href="#public-methods"></a>Public methods</h2>
 
     <p><ul>
-<li><p><strong>$new(cwe, cwe_ts, start_year, end_year, end_month)</strong> creates new NVD object</p></li>
-<li><p><strong>$getStartYear()</strong> item</p></li>
-<li><p><strong>$getEndYear()</strong></p></li>
-<li><p><strong>$getTrainingSet()</strong> ...</p></li>
-<li><p><strong>$getTestSet()</strong> ...</p></li>
-<li><p><strong>$getFcasted()</strong> ...</p></li>
-<li><p><strong>$getMethod()</strong> ...</p></li>
-<li><p><strong>$getAssessment()</strong> ...</p></li>
-<li><p><strong>$getFcastPeriod()</strong> ...</p></li>
-<li><p><strong>$getTSetChar()</strong> ...</p></li>
-<li><p><strong>$getResiduals()</strong> ...</p></li>
-<li><p><strong>$getMergedTrainTestSet()</strong> ...</p></li>
-<li><p><strong>$getSignificanceLevel()</strong> ...</p></li>
-<li><p><strong>$areResidualsNotRandom()</strong> ...</p></li>
-<li><p><strong>$areResidualsNotNormal()</strong> ...</p></li>
-<li><p><strong>$isPiIgnored()</strong> ...</p></li>
-<li><p><strong>$isBootstrapNotUsed()</strong> ...</p></li>
-<li><p><strong>$setSignificanceLevel()</strong> ...</p></li>
-<li><p><strong>$setResidualsNotRandom()</strong> ...</p></li>
-<li><p><strong>$setBootstrapNotUsed()</strong> ...</p></li>
-<li><p><strong>$setPiIgnored()</strong> ...</p></li>
-<li><p><strong>$setFcasted()</strong> ...</p></li>
-<li><p><strong>$setFcastPeriod()</strong> ...</p></li>
-<li><p><strong>$assessModel()</strong> ...</p></li>
-<li><p><strong>$testResidualsRandomnessBox()</strong> ...</p></li>
-<li><p><strong>$testResidualsRandomnessBreusch()</strong> ...</p></li>
-<li><p><strong>$testResidualsNormality()</strong> ...</p></li>
-<li><p><strong>$getPlot()</strong> ...</p></li>
-<li><p><strong>$compareCombinedAccuracy()</strong> ...</p></li>
-<li><p><strong>$findLambda()</strong> ...</p></li>
+<li><p><strong>new(cwe, cwe_ts, start_year, end_year, end_month)</strong> creates new NVD object</p></li>
+<li><p><strong>getStartYear()</strong> returns private attribute <code>start_year</code></p></li>
+<li><p><strong>getEndYear()</strong> returns private attribute <code>end_year</code></p></li>
+<li><p><strong>getTrainingSet()</strong> returns private attribute <code>train</code></p></li>
+<li><p><strong>getTestSet()</strong> returns private attribute <code>test</code></p></li>
+<li><p><strong>getFcasted()</strong> returns private attribute <code>fcast</code></p></li>
+<li><p><strong>getMethod()</strong> returns attribute <code>method</code> of private attribute <code>fcast</code></p></li>
+<li><p><strong>getAssessment()</strong> returns private attribute <code>assessment</code></p></li>
+<li><p><strong>getFcastPeriod()</strong> returns private attribute <code>fcast_period</code></p></li>
+<li><p><strong>getTSetChar()</strong> returns private attribute <code>tset_char</code></p></li>
+<li><p><strong>getResiduals(model)</strong> returns residuals from <code>model</code> processed by <code><a href='http://www.rdocumentation.org/packages/zoo/topics/na.approx'>zoo::na.approx</a></code>; <code>model</code> is obtained from <a href='FitModel.html'>FitModel</a>'s method <code>getFitted</code> or NVDModel's method <code>getFcasted</code></p></li>
+<li><p><strong>getMergedTrainTestSet()</strong> returns a <code><a href='http://www.rdocumentation.org/packages/stats/topics/ts'>stats::ts</a></code> object after merging both the training set and the test set</p></li>
+<li><p><strong>getSignificanceLevel()</strong> returns private attribute <code>significance_level</code></p></li>
+<li><p><strong>areResidualsNotRandom()</strong> returns private attribute <code>residuals_not_random</code></p></li>
+<li><p><strong>areResidualsNotNormal()</strong> returns private attribute <code>residuals_not_normal</code></p></li>
+<li><p><strong>isPiIgnored()</strong> returns private attribute <code>pi_ignored</code></p></li>
+<li><p><strong>isBootstrapNotUsed()</strong> returns private attribute <code>bootstrap_not_used</code></p></li>
+<li><p><strong>setSignificanceLevel(significance)</strong> sets <code>significance</code> as the value of private attribute <code>significance_level</code></p></li>
+<li><p><strong>setResidualsNotRandom(testresult)</strong> sets <code>testresult</code> as the value of private attribute <code>residuals_not_random</code></p></li>
+<li><p><strong>setResidualsNotNormal(testresult)</strong> sets <code>testresult</code> as the value of private attribute <code>residuals_not_normal</code></p></li>
+<li><p><strong>setBootstrapNotUsed(logical_value)</strong> sets <code>logical_value</code> as the value of private attribute <code>bootstrap_not_used</code></p></li>
+<li><p><strong>setPiIgnored(logical_value)</strong> sets <code>logical_value</code> as the value of private attribute <code>pi_ignored</code></p></li>
+<li><p><strong>setFcasted(fcast_result)</strong> sets <code>fcast_result</code> as the value of private attribute <code>fcast</code></p></li>
+<li><p><strong>setFcastPeriod(period)</strong> sets <code>period</code> as the value of private attribute <code>fcast_period</code></p></li>
+<li><p><strong>assessModel()</strong> calculates and sets MAE, RMSE, MAPE, MASE values as the value of private attribute <code>assessment</code></p></li>
+<li><p><strong>testResidualsRandomnessBox(residuals, df)</strong> uses residuals and degrees of freedom arguments and performs the Ljung-Box test; returns whether the obtained p-value is less or equal than the significance level</p></li>
+<li><p><strong>testResidualsRandomnessBreusch(residuals, df, fitted_model)</strong> uses residuals, degrees of freedom and fitted model arguments and performs the Breusch-Godfrey test; returns whether the obtained p-value is less or equal than the significance level</p></li>
+<li><p><strong>testResidualsNormality(residuals)</strong> uses residuals arguments and performs the Shapiro-Wilk test; returns whether the obtained p-value is less or equal than the significance level</p></li>
+<li><p><strong>getPlot()</strong> returns a plot of forecast results and actual values as a red line when the forecasting results are available in the private attribute <code>fcast</code>; adds an exclamation mark to y-axis label when <code>self$areResidualsNotRandom() | (self$areResidualsNotNormal() &amp; self$isBootstrapNotUsed()) | self$isPiIgnored()</code></p></li>
+<li><p><strong>compareCombinedAccuracy(fcast1, fcast2)</strong> takes two collections of forecasts and returns a logical value indicating whether the first collection of forecasted values has bigger amount of smaller MAE, RMSE, MAPE and MASE values than the other collection of forecasted values</p></li>
+<li><p><strong>findLambda(training_set)</strong> returns the lambda found by <a href='http://pkg.robjhyndman.com/forecast/reference/BoxCox.lambda.html'>forecast::BoxCox.lambda</a> based on the training set</p></li>
 </ul></p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This class's private function `residuals_lag` is using GPL-3 licensed code from (R package "forecast"
+    <p>This class's private method `residuals_lag` is using GPL-3 licensed code from (R package "forecast"
 by Rob Hyndman, Mitchell O'Hara-Wild, Christoph Bergmeir, Slava Razbash
 and Earo Wang)
 <a href='https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R'>https://github.com/robjhyndman/forecast/blob/c87f33/R/checkresiduals.R</a>
@@ -132,6 +175,10 @@ from lines 122 and 123 to calculate the lag parameter.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
+      <li><a href="#direct-subclasses">Direct Subclasses</a></li>
+
+      <li><a href="#private-attributes">Private attributes</a></li>
+
       <li><a href="#public-methods">Public methods</a></li>
 
       <li><a href="#note">Note</a></li>

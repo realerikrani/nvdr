@@ -90,7 +90,7 @@ get_nvd_from_files <- function(files){
 #' access complexity, authentication, confidentiality impact, integrity impact,
 #' availability impact)
 #'
-#' @param files One or many XML Version 2.0 files from
+#' @param files Names of one or many XML Version 2.0 files downloaded from
 #' \url{https://nvd.nist.gov/vuln/data-feeds#CVE_FEED}
 #'
 #' @return A data.table containing NVD entries extracted from (a) file(s).
@@ -99,7 +99,7 @@ get_nvd_from_files <- function(files){
 #' @examples
 #' \dontrun{
 #' get_nvd_entries(c("nvdcve-2.0-2013.xml","nvdcve-2.0-2015.xml"))
-#' get_nvd_from_file("nvdcve-2.0-2013.xml")
+#' get_nvd_entries("nvdcve-2.0-2013.xml")
 #' }
 get_nvd_entries <- function(files){
   if (length(files) == 1) {

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>... — FitModel â€¢ nvdr</title>
+<title>Class FitModel — FitModel â€¢ nvdr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -75,20 +90,62 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>...</h1>
+    <h1>Class FitModel</h1>
     </div>
 
     
-    <p>...</p>
+    <p>Represents models that need to be fitted before forecasting.</p>
     
 
         
+    <h2 class="hasAnchor" id="direct-superclass"><a class="anchor" href="#direct-superclass"></a>Direct Superclass</h2>
+
+    <p><ul>
+<li><p><a href='NVDModel.html'>NVDModel</a></p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="direct-subclasses"><a class="anchor" href="#direct-subclasses"></a>Direct Subclasses</h2>
+
+    <p><ul>
+<li><p><a href='ARFIMAModel.html'>ARFIMAModel</a>,</p></li>
+<li><p><a href='ARIMAModel.html'>ARIMAModel</a>,</p></li>
+<li><p><a href='BaggedETSModel.html'>BaggedETSModel</a>,</p></li>
+<li><p><a href='ETSModel.html'>ETSModel</a>,</p></li>
+<li><p><a href='NNARModel.html'>NNARModel</a>,</p></li>
+<li><p><a href='StructTSModel.html'>StructTSModel</a>,</p></li>
+<li><p><a href='TBATSModel.html'>TBATSModel</a>,</p></li>
+<li><p><a href='TSLinearModel.html'>TSLinearModel</a>,</p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="private-attributes"><a class="anchor" href="#private-attributes"></a>Private attributes</h2>
+
+    <p><ul>
+<li><p><strong>fit</strong> the attribute to store the fitted model's object (default NA)</p></li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="public-methods"><a class="anchor" href="#public-methods"></a>Public methods</h2>
+
+    <p><ul>
+<li><p><strong>getFitted()</strong> returns private attribute <code>fit</code></p></li>
+<li><p><strong>setFitted(fit_result)</strong> sets <code>fit_result</code> as the value of private attribute <code>fit</code></p></li>
+<li><p><strong>setFittedFcasted(fit_function, test_randomness, fcast_function, ...)</strong> calls the fitting function, the forecasting function, performs residuals analysis and generates forecast intervals from bootstrapped residuals for ARIMA and ETS models when <code>!super$isPiIgnored() &amp; super$areResidualsNotNormal() &amp; !super$areResidualsNotRandom()</code></p></li>
+<li><p><strong>executeUseModel(fit_function, fcast_function, fcast_period, ...)</strong> calls the fitting function, which uses the new training set (obtained by calling <a href='NVDModel.html'>NVDModel</a>'s method <code>getMergedTrainTestSet</code>), then calls the forecasting function which uses generating forecasting intervals from bootstrapped residuals when <code>!super$isBootstrapNotUsed() = TRUE</code></p></li>
+</ul></p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      
+      <li><a href="#direct-superclass">Direct Superclass</a></li>
+
+      <li><a href="#direct-subclasses">Direct Subclasses</a></li>
+
+      <li><a href="#private-attributes">Private attributes</a></li>
+
+      <li><a href="#public-methods">Public methods</a></li>
+          </ul>
 
   </div>
 </div>

@@ -52,18 +52,33 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Documentation</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    User Guide
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/installation.html">Installation</a>
+    </li>
+    <li>
+      <a href="../articles/forecasting.html">Forecasting</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/realerikrani/nvdr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+    Source Code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -77,7 +92,7 @@
     <div class="page-header">
       <h1>
         Reference
-        <small>version&nbsp;0.1</small>
+        <small>version&nbsp;0.9</small>
       </h1>
     </div>
 
@@ -92,7 +107,7 @@
       <tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-classes" class="hasAnchor"><a href="#section-classes" class="anchor"></a>Classes</h2>
+            <h2 id="section-classes-for-the-user" class="hasAnchor"><a href="#section-classes-for-the-user" class="anchor"></a>Classes for the User</h2>
             <p class="section-desc"></p>
           </th>
         </tr>
@@ -101,36 +116,122 @@
           <td>
             <p><code><a href="CWE.html">CWE</a></code> </p>
           </td>
-          <td><p>CWE data handler</p></td>
+          <td><p>Class CWE</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="CVSSForecaster.html">CVSSForecaster</a></code> </p>
           </td>
-          <td><p>CVSS Forecaster</p></td>
+          <td><p>Class CVSSForecaster</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="NVDModel.html">NVDModel</a></code> </p>
           </td>
-          <td><p>...</p></td>
-        </tr><tr>
+          <td><p>Class NVDModel</p></td>
+        </tr>
+      </tbody><tbody>
+        <tr>
+          <th colspan="2">
+            <h2 id="section-internal-classes" class="hasAnchor"><a href="#section-internal-classes" class="anchor"></a>Internal Classes</h2>
+            <p class="section-desc"></p>
+          </th>
+        </tr>
+        <tr>
           <!--  -->
           <td>
             <p><code><a href="FcastModel.html">FcastModel</a></code> </p>
           </td>
-          <td><p>...</p></td>
+          <td><p>Class FcastModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="BenchmarkModel.html">BenchmarkModel</a></code> </p>
+          </td>
+          <td><p>Class BenchmarkModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="MeanModel.html">MeanModel</a></code> </p>
+          </td>
+          <td><p>Class MeanModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="DriftModel.html">DriftModel</a></code> </p>
+          </td>
+          <td><p>Class DriftModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="NaiveModel.html">NaiveModel</a></code> </p>
+          </td>
+          <td><p>Class NaiveModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="SeasonalNaiveModel.html">SeasonalNaiveModel</a></code> </p>
+          </td>
+          <td><p>Class SeasonalNaiveModel</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="FitModel.html">FitModel</a></code> </p>
           </td>
-          <td><p>...</p></td>
+          <td><p>Class FitModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="ARIMAModel.html">ARIMAModel</a></code> </p>
+          </td>
+          <td><p>Class ARIMAModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="ARFIMAModel.html">ARFIMAModel</a></code> </p>
+          </td>
+          <td><p>Class ARFIMAModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="BaggedETSModel.html">BaggedETSModel</a></code> </p>
+          </td>
+          <td><p>Class BaggedETSModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="ETSModel.html">ETSModel</a></code> </p>
+          </td>
+          <td><p>Class ETSModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="NNARModel.html">NNARModel</a></code> </p>
+          </td>
+          <td><p>Class NNARModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="StructTSModel.html">StructTSModel</a></code> </p>
+          </td>
+          <td><p>Class StructTSModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="TBATSModel.html">TBATSModel</a></code> </p>
+          </td>
+          <td><p>Class TBATSModel</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="TSLinearModel.html">TSLinearModel</a></code> </p>
+          </td>
+          <td><p>Class TSLinearModel</p></td>
         </tr>
       </tbody><tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-functions" class="hasAnchor"><a href="#section-functions" class="anchor"></a>Functions</h2>
+            <h2 id="section-functions-for-the-user" class="hasAnchor"><a href="#section-functions-for-the-user" class="anchor"></a>Functions for the User</h2>
             <p class="section-desc"></p>
           </th>
         </tr>
@@ -163,8 +264,9 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-classes">Classes</a></li>
-      <li><a href="#section-functions">Functions</a></li>
+      <li><a href="#section-classes-for-the-user">Classes for the User</a></li>
+      <li><a href="#section-internal-classes">Internal Classes</a></li>
+      <li><a href="#section-functions-for-the-user">Functions for the User</a></li>
       <li><a href="#section-data">Data</a></li>
     </ul>
   </div>

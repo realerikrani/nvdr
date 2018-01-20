@@ -1,0 +1,26 @@
+---
+title: "Installation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+It is assumed that R is [downloaded and installed](https://www.r-project.org/) on a UNIX platform, Windows or MacOS.
+The installation instructions can be followed from the R console.
+
+## Installation
+
+Install *nvdr* from GitHub.
+```{r gh-installation, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("realerikrani/nvdr")
+```

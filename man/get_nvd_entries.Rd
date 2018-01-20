@@ -7,7 +7,7 @@
 get_nvd_entries(files)
 }
 \arguments{
-\item{files}{One or many XML Version 2.0 files from
+\item{files}{Names of one or many XML Version 2.0 files downloaded from
 \url{https://nvd.nist.gov/vuln/data-feeds#CVE_FEED}}
 }
 \value{
@@ -24,6 +24,6 @@ availability impact)
 \examples{
 \dontrun{
 get_nvd_entries(c("nvdcve-2.0-2013.xml","nvdcve-2.0-2015.xml"))
-get_nvd_from_file("nvdcve-2.0-2013.xml")
+get_nvd_entries("nvdcve-2.0-2013.xml")
 }
 }

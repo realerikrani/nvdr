@@ -1,3 +1,33 @@
+#' Class NNARModel
+#'
+#' Represents Feed-forward single-hidden-layer neural network autoregression models.
+#'
+#' @section Direct Superclass:{
+#' \itemize{
+#' \item \link{FitModel}
+#' }
+#' }
+#'
+#' @section Important Dependencies: {
+#' \itemize{
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/nnetar.html}{forecast::nnetar}
+#' \item \href{http://pkg.robjhyndman.com/forecast/reference/forecast.html}{forecast::forecast}
+#' }
+#' }
+#'
+#'
+#' @section Public methods:{
+#' \itemize{
+#'   \item \strong{buildModel(...)} passes on parameter \code{PI} and fitting and forecasting functions to \link{FitModel}'s method \code{setFittedFcasted}; applies Box-Cox transformation without bias-adjustment; ignores passing function which checks whether residuals are not independently distributed
+#'   \item \strong{useModel(fcast_period, ...)} calls \link{FitModel}'s method \code{executeUseModel} to fit model and forecast \code{fcast_period}-step ahead future; passes on the same fitting and forecasting functions as \code{buildmodel()}
+#' }
+#' }
+#'
+#' @importFrom R6 R6Class
+#' @name NNARModel
+#' @export
+#'
+NULL
 NNARModel <- R6::R6Class(
   "NNARModel",
   inherit = FitModel,

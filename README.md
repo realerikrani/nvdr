@@ -10,7 +10,7 @@ output:
 nvdr
 ====
 
-[![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip) [![Travis-CI Build Status](https://travis-ci.org/realerikrani/nvdr.svg?branch=master)](https://travis-ci.org/realerikrani/nvdr)
+[![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Travis-CI Build Status](https://travis-ci.org/realerikrani/nvdr.svg?branch=master)](https://travis-ci.org/realerikrani/nvdr)
 
 Installation
 ------------
@@ -21,6 +21,11 @@ Install *nvdr* from GitHub.
 install.packages("remotes")
 remotes::install_github("realerikrani/nvdr")
 ```
+
+Documentation and User Guide
+----------------------------
+
+<https://realerikrani.github.io/nvdr/>
 
 Examples
 --------
@@ -72,7 +77,7 @@ cf$getAllAssessments()
 ## Save a list of current models with best forecast accuracy.
 cf$setBestModelList()
 ## Plot the best models list
-cf$getPlots((cf$getBestModelList()))
+cf$getPlots(cf$getBestModelList())
 ## Merge the best models' (for each CWE based on the best forecast accuracy) training and test data into new training data for forecasts of the unknown future of 9 months.
 list_of_unseen_future_forecasts <- cf$useBest(9)
 ## Plot the used best models' new forecasts
@@ -81,41 +86,6 @@ cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2)
 ## has been created containing time series test data, one can find out the forecast accuracy and add the obtained actual values to plots
 cf$assessUseBest(list_of_unseen_future_forecasts, c2$getTimeSeriesData())
 cf$plotUseBest(list_of_unseen_future_forecasts, row_no = 5, col_no = 2, actual = c2$getTimeSeriesData())
-
-## Available subset of methods for class CVSSForecaster. See the source code to understand specific use cases.
-   setBenchmark() ## (Pick best comparing Naive, Drift, Seasonal Naive and Mean).
-   setARIMA()
-   setETS()
-   setTSLinear()
-   setNNAR()
-   setARFIMA()
-   setBaggedETS()
-   setTBATS()
-   setStructTS()
-   getCWENames()
-   getSeries()
-   getBestAssessments()
-   getAllAssessments()
-   
-## Available for class CWE. See the source code to understand specific use cases.
-  getStartYear()
-  getEndYear(plus_one = F)
-  getStartMonth(as_number = F)
-  getEndMonth(as_number = F, plus_one = F)
-  getBaseData()
-  getTimeSeriesData()
-  setStartYear(year)
-  setEndYear(year)
-  setStartMonth(smonth)
-  setEndMonth(emonth)
-  setBaseData(files)
-  setTimeSeriesData(ts_data)
-  getAnalysisData()
-  getMostInstances(threshold = 100)
-  getMostCritical(min_score = 4.0)
-  getChanging(period_threshold = 200)
-  getInterestingMonthlyData(threshold = 100, min_score = 4.0, period_threshold = 200, as_monthly_ts = T)
-  getMonthlyData(desired_cwes)
 ```
 
 Look at the included binary data.
@@ -136,8 +106,9 @@ The forecasts of *nvdr* rely on the methods provided by R package *forecast*.
 
     @Manual{,
       title = {{forecast}: Forecasting functions for time series and linear models},
-      author = {Rob J Hyndman},
+      author = {Rob Hyndman and Christoph Bergmeir and Gabriel Caceres and Mitchell O'Hara-Wild and Slava Razbash and Earo Wang},
       year = {2017},
+      note = {R package version 8.3},
       url = {http://pkg.robjhyndman.com/forecast},
     }
 
