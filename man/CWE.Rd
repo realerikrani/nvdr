@@ -36,9 +36,9 @@ Manages the data that forms the basis of the forecasts.
   \item \strong{setEndYear(year)} assings the \code{numeric} value of \code{year} to private attribute \code{end_year}
   \item \strong{setStartMonth(smonth)} assings the \code{numeric} value of \code{smonth} to private attribute \code{start_month}
   \item \strong{setEndMonth(emonth)} assings the \code{numeric} value of \code{emonth} to private attribute \code{end_month}
-  \item \strong{setBaseData(files)} assings the output from \link{get_nvd_entries}(files) to private attribute \code{base_data}; if the argument \code{files} is missing, then assings \link{nvd} to \code{base_data}
+  \item \strong{setBaseData(files)} calls \link{get_nvd_entries}(files) and assings the output to private attribute \code{base_data}; if the argument \code{files} is missing, then assings \link{nvd} to \code{base_data}
   \item \strong{setTimeSeriesData(ts_data)} assigns the \link[stats]{ts} value of \code{ts_data} to private attribute \code{time_series_data}
-  \item \strong{getAnalysisData()} return a \link[data.table]{data.table} where CWEs are between the time limits set by private attributes, where each entry corresponds to one CWE and where each CWE has the date when it was published and its CVSS score (NAs are omitted)
+  \item \strong{getAnalysisData()} returns a \link[data.table]{data.table} where CWEs are between the time limits set by private attributes, where each entry corresponds to one CWE and where each CWE has the date when it was published and its CVSS score (NAs are omitted)
   \item \strong{getMostInstances(threshold = 100)} returns CWEs which are counted at least \code{threshold} times in a year belonging to the time period set by private attributes
   \item \strong{getMostCritical(min_score = 4.0)} returns CWEs which have higher mean yearly mean (found by using summed yearly mean CVSS scores and the years count of the time period) severity score than \code{min_score}
   \item \strong{getChanging(period_threshold = 200)} returns CWEs with a total count of at least \code{period_threshold} which mean absolute percentage change (count of the last year vs counts of other years) is higher than the median of the calculated mean absolute percentage change numbers.

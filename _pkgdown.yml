@@ -32,15 +32,20 @@ reference:
 navbar:
   title: nvdr
   left:
-  - text: Documentation
+  - icon: "fa-book fa-lg"
+    text: Documentation
     href: reference/index.html
   right:
-    - text: "User Guide"
+    - icon: "fa-rocket fa-lg"
+      text: "User Guide"
       menu:
       -  text: Installation
          href: articles/installation.html
       -  text: Forecasting
          href: articles/forecasting.html
-    - icon: fa-github fa-lg
+    - icon: fa-tachometer fa-lg
+      text: "Performance"
+      href: articles/performance.html
+    - icon: "fa-github fa-lg"
       text: "Source Code"
       href: https://github.com/realerikrani/nvdr/

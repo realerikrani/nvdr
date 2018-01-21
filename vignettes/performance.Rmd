@@ -1,0 +1,103 @@
+---
+title: "Performance of v0.9"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Execution time was measured when executing some commands presented in the user guide ["Forecasting the Mean Monthly CVSS Scores"](forecasting.html). The results were obtained with a computer that has 15.9 GB usable RAM and Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz 2.40GHz.
+
+```{r, eval=FALSE}
+> start_time <- Sys.time()
+> c <- CWE$new()
+> c$setBaseData()
+> c$setTimeSeriesData(c$getInterestingMonthlyData())
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 5.066274 secs
+>
+> start_time <- Sys.time()
+> cf <- CVSSForecaster$new()
+> cf$setCWEs(c)
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 0 secs
+> 
+> start_time <- Sys.time()
+> cf$setBenchmark()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 28.29203 secs
+> 
+> start_time <- Sys.time()
+> cf$setTSLinear()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 0.8551829 secs
+> 
+> start_time <- Sys.time()
+> cf$setETS()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 13.48054 secs
+> 
+> start_time <- Sys.time()
+> cf$setStructTS()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 3.740569 secs
+> 
+> start_time <- Sys.time()
+> cf$setBaggedETS()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 24.89006 mins
+> 
+> start_time <- Sys.time()
+> cf$setARIMA(stepwise = F, approximation = F)
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 4.059665 mins
+> 
+> start_time <- Sys.time()
+> cf$setARFIMA()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 2.438971 secs
+> 
+> start_time <- Sys.time()
+> cf$setNNAR(pi_simulation = T)
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 6.456933 mins
+> 
+> start_time <- Sys.time()
+> cf$setTBATS()
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 28.61853 secs
+>
+> start_time <- Sys.time()
+> c2 <- CWE$new()
+> c2$setStartYear(2017)
+> c2$setEndYear(2017)
+> c2$setBaseData(c("nvdcve-2.0-2011.xml","nvdcve-2.0-2012.xml","nvdcve-2.0-2013.xml","nvdcve-2.0-2014.xml","nvdcve-2.0-2015.xml","nvdcve-2.0-2016.xml","nvdcve-2.0-2017.xml"))
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 2.308802 mins
+> 
+> start_time <- Sys.time()
+> c2$setTimeSeriesData(c2$getMonthlyData(cf$getCWENames()))
+> end_time <- Sys.time()
+> end_time - start_time
+Time difference of 0.5726199 secs
+```

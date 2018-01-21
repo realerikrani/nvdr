@@ -40,7 +40,7 @@ cf$setCWEs(c)
 
 ## Generate Forecasts
 
-Make the `cf` object to generate forecasts of 13 different types of models as `setBenchmark` chooses the benchmark model after comparing the accuracy of 4 different benchmark models and `setTBATS` can give `BATS` or `TBATS` models as output. Executing all the following commands takes multiple minutes. Creating Bagged ETS, ARIMA and NNAR models is time-consuming.
+Make the `cf` object to generate forecasts of 13 different types of models as `setBenchmark` chooses the benchmark model after comparing the accuracy of 4 different benchmark models and `setTBATS` can give `BATS` or `TBATS` models as output. Executing all the following commands takes multiple minutes. Creating Bagged ETS, ARIMA and NNAR models is time-consuming (see ["Performance"](performance.html)).
 
 ```{r, eval=FALSE}
 cf$setBenchmark()
