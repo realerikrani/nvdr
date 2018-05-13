@@ -1,6 +1,6 @@
 Package: nvdr
 Title: NVD Vulnerability Data Analyser
-Version: 0.9
+Version: 1.0
 Authors@R: person("github.com/realerikrani", email = "realerikrani@tuta.io", role = c("aut", "cre", "cph"))
 Description: R package *nvdr* provides forecasts of monthly mean CVSS scores of subsets of CWE vulnerabilities.
 Depends: R (>= 3.4.1)
@@ -9,22 +9,20 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports:
-    XML,
-    data.table,
+    XML (>= 3.98-1.9),
+    data.table (>= 1.10.4-3),
     plyr,
     zoo,
     stats,
-    forecast,
     gridExtra,
     ggplot2,
     utils,
     methods,
     R6,
     fracdiff,
-    remotes,
-    lmtest,
-    tibble
-Remotes: robjhyndman/forecast
+    lmtest (>= 0.9-35),
+    tibble (>= 1.4.1),
+    forecast (== 8.3)
 Collate:
     'global_utils.R'
     'nvdmodel.R'

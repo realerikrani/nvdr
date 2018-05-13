@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-It is assumed that R is [downloaded and installed](https://www.r-project.org/) on a UNIX platform, Windows or MacOS.
-The installation instructions can be followed from the R console.
+It is assumed that R is [downloaded and installed](https://www.r-project.org/) on a UNIX platform, Windows or MacOS. In the case of Ubuntu or other Linux systems, sometimes other programs such as libcurl4-openssl-dev and libxml2-dev need to be installed as well (then the error messages mention missing "curl" or "xml2-config").
+Eventually, the installation instructions can be followed from the R console.
 
 ## Installation
 
